@@ -15,6 +15,7 @@ extern "C" {
   fn __bid128_from_uint32(x: c_uint) -> Decimal128;
   fn __bid128_from_uint64(x: c_ulong) -> Decimal128;
   fn __bid128_mul(x: Decimal128, y: Decimal128, round: c_uint, flags: *mut c_uint) -> Decimal128;
+  fn __bid128_scalbn(x: Decimal128, n: c_int) -> Decimal128;
   fn __bid128_to_string(s: *mut c_char, x: Decimal128, flags: *mut c_uint);
 }
 
@@ -50,6 +51,11 @@ pub fn bid128_from_uint64(x: u64) -> Decimal128 {
 #[inline(always)]
 pub fn bid128_mul(x: Decimal128, y: Decimal128, round: u32, flags: &mut u32) -> Decimal128 {
   unsafe { __bid128_mul(x, y, round, flags) }
+}
+
+#[inline(always)]
+pub fn bid128_scalbn(x: Decimal128, n: i32) -> Decimal128 {
+  unsafe { __bid128_scalbn(x, n) }
 }
 
 #[inline(always)]

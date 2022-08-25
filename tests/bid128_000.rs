@@ -92,4 +92,10 @@ mod tests_000 {
     assert_eq!(FlagBits::Inexact as u32, flags);
     eq("+8507059173023461584739690778423250E+4", z);
   }
+
+  #[test]
+  fn test_mul_0004() {
+    let x = bid128_scalbn(bid128_from_int64(235678910), -8);
+    eq("+235678910E-8", x);
+  }
 }
