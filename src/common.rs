@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 #[repr(u32)]
 pub enum FlagBits {
   Invalid = 0x01,

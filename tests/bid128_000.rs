@@ -16,6 +16,16 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_add_0001() {
+    let x = bid128_from_int32(2);
+    let y = bid128_from_int32(5);
+    let mut flags: u32 = FlagBits::AllFlagsClear as u32;
+    let z = bid128_add(x, y, 0, &mut flags);
+    assert_eq!(FlagBits::AllFlagsClear as u32, flags);
+    eq("+7E+0", z);
+  }
+
+  #[test]
   fn test_bid128_from_int32() {
     eq("-2147483648E+0", bid128_from_int32(i32::MIN));
     eq("-10E+0", bid128_from_int32(-10));
