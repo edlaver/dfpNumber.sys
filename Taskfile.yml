@@ -4,20 +4,10 @@ silent: true
 
 tasks:
 
-  all:
-    desc: Runs all building steps
-    cmds:
-      - cmd: cargo fmt && cargo clean && cargo build && cargo clippy -- -D warnings && cargo test && echo "SUCCESS"
-
-  build:
-    desc: Builds the library in debug mode
+  build000:
+    desc: Builds the library in debug mode with settings 000
     cmds:
       - cmd: cargo build
-
-  bench:
-    desc: Runs benchmarks
-    cmds:
-      - cmd: cargo bench -q | grep 'test bench_'
 
   clean:
     desc: Cleans all targets
@@ -25,14 +15,14 @@ tasks:
       - cmd: cargo clean
 
   doc-open:
-    desc: Generates and opens the documentation in browser
+    desc: Generates the documentation and opens it in the browser
     cmds:
-      - cmd: cargo doc --document-private-items --no-deps --open
+      - cmd: cargo doc --no-deps --open
 
   doc:
     desc: Generates the documentation
     cmds:
-      - cmd: cargo doc --document-private-items --no-deps
+      - cmd: cargo doc --no-deps
 
   release:
     desc: Builds the library in release mode
@@ -40,13 +30,13 @@ tasks:
       - cmd: cargo clean
       - cmd: cargo +stable build --release
 
-  test:
+  test000:
     desc: Tests the library in debug mode
     cmds:
       - cmd: cargo test
 
   clippy:
-    desc: Runs linter for all targets
+    desc: Runs clippy for all targets
     cmds:
       - cmd: cargo clippy --all-targets
 

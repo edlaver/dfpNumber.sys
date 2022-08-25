@@ -12,12 +12,27 @@
  * SOFTWARE.
  */
 
+#[cfg(not(feature = "call-by-reference"))]
+const DECIMAL_CALL_BY_REFERENCE: &str = "0";
+#[cfg(feature = "call-by-reference")]
+const DECIMAL_CALL_BY_REFERENCE: &str = "1";
+
+#[cfg(not(feature = "global-rounding"))]
+const DECIMAL_GLOBAL_ROUNDING: &str = "0";
+#[cfg(feature = "global-rounding")]
+const DECIMAL_GLOBAL_ROUNDING: &str = "1";
+
+#[cfg(not(feature = "global-exception-flags"))]
+const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "0";
+#[cfg(feature = "global-exception-flags")]
+const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "1";
+
 fn main() {
   let output_dir = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
   cc::Build::new()
-    .define("DECIMAL_CALL_BY_REFERENCE", "0")
-    .define("DECIMAL_GLOBAL_ROUNDING", "0")
-    .define("DECIMAL_GLOBAL_EXCEPTION_FLAGS", "0")
+    .define("DECIMAL_CALL_BY_REFERENCE", DECIMAL_CALL_BY_REFERENCE)
+    .define("DECIMAL_GLOBAL_ROUNDING", DECIMAL_GLOBAL_ROUNDING)
+    .define("DECIMAL_GLOBAL_EXCEPTION_FLAGS", DECIMAL_GLOBAL_EXCEPTION_FLAGS)
     .flag_if_supported("-Wno-unused-value")
     .flag_if_supported("-Wno-unused-variable")
     .flag_if_supported("-Wno-unused-but-set-variable")
