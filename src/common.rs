@@ -10,11 +10,11 @@ pub struct BID128 {
 /// Error flag `Invalid`.
 pub const FLAG_BITS_INVALID: u32 = FlagBits::Invalid as u32;
 /// Error flag `ZeroDivide`.
-pub const FLAG_ZERO_DIVIDE: u32 = FlagBits::ZeroDivide as u32;
+pub const FLAG_BITS_ZERO_DIVIDE: u32 = FlagBits::ZeroDivide as u32;
 /// Error flag `Overflow`.
-pub const FLAG_ZERO_OVERFLOW: u32 = FlagBits::Overflow as u32;
+pub const FLAG_BITS_OVERFLOW: u32 = FlagBits::Overflow as u32;
 /// Error flag `Underflow`.
-pub const FLAG_ZERO_UNDERFLOW: u32 = FlagBits::Underflow as u32;
+pub const FLAG_BITS_UNDERFLOW: u32 = FlagBits::Underflow as u32;
 /// Error flag `Inexact`.
 pub const FLAG_BITS_INEXACT: u32 = FlagBits::Inexact as u32;
 /// Error flag `AllClear`.

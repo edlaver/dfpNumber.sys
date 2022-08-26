@@ -125,7 +125,7 @@ mod tests_000 {
     let x = bid128_from_int32(0);
     let mut flags = FLAG_BITS_CLEAR;
     let z = bid128_log(x, 0, &mut flags);
-    assert_eq!(FlagBits::ZeroDivide as u32, flags);
+    assert_eq!(FLAG_BITS_ZERO_DIVIDE, flags);
     eq("-Inf", z);
   }
 
@@ -191,13 +191,30 @@ mod tests_000 {
     let y = bid128_from_int64(i64::MAX);
     let mut flags = FLAG_BITS_CLEAR;
     let z = bid128_mul(x, y, 0, &mut flags);
-    assert_eq!(FlagBits::Inexact as u32, flags);
+    assert_eq!(FLAG_BITS_INEXACT, flags);
     eq("+8507059173023461584739690778423250E+4", z);
   }
 
   #[test]
-  fn test_bid128_mul_0004() {
-    let x = bid128_scalbn(bid128_from_int64(235678910), -8);
-    eq("+235678910E-8", x);
+  fn test_bid128_quantize_0001() {
+    let x = d128("2.3456");
+    let y = d128("0.001");
+    let mut flags = FLAG_BITS_CLEAR;
+    let z = bid128_quantize(x, y, 0, &mut flags);
+    assert_eq!(FLAG_BITS_INEXACT, flags);
+    eq("+2346E-3", z);
+  }
+
+  #[test]
+  fn test_bid128_scalbn_0001() {
+    let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
+    eq("+2356789100E-9", x);
+  }
+
+  #[test]
+  fn test_bid128_scalbn_0002() {
+    let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
+    let y = bid128_scalbn(x, 2);
+    eq("+2356789100E-7", y);
   }
 }

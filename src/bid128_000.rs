@@ -19,6 +19,7 @@ extern "C" {
   fn __bid128_isZero (x: BID128) -> c_int;
   fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
 }
@@ -83,6 +84,14 @@ pub fn bid128_log(x: BID128, round: u32, flags: &mut u32) -> BID128 {
 #[inline(always)]
 pub fn bid128_mul(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_mul(x, y, round, flags) }
+}
+
+/// Returns the number which is equal in value (except for any rounding) and sign
+/// to the first (left-hand) operand and which has an exponent set to be equal
+/// to the exponent of the second (right-hand) operand.
+#[inline(always)]
+pub fn bid128_quantize(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_quantize(x, y, round, flags) }
 }
 
 /// Returns `x * 10^n`.
