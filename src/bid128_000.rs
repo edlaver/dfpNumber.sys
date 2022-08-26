@@ -23,6 +23,7 @@ extern "C" {
   fn __bid128_negate(x: BID128) -> BID128;
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_quiet_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
   fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
@@ -117,6 +118,11 @@ pub fn bid128_mul(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
 #[inline(always)]
 pub fn bid128_quantize(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_quantize(x, y, round, flags) }
+}
+
+#[inline(always)]
+pub fn bid128_quiet_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
+  unsafe { __bid128_quiet_equal(x, y, flags) != 0 }
 }
 
 /// Returns `x * 10^n`.
