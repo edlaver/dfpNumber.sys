@@ -19,6 +19,7 @@ extern "C" {
   fn __bid128_isZero (x: BID128) -> c_int;
   fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_minnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
+  fn __bid128_negate(x: BID128) -> BID128;
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
@@ -88,6 +89,12 @@ pub fn bid128_log(x: BID128, round: u32, flags: &mut u32) -> BID128 {
 #[inline(always)]
 pub fn bid128_minnum(x: BID128, y: BID128, flags: &mut u32) -> BID128 {
   unsafe { __bid128_minnum(x, y, flags) }
+}
+
+/// Returns the same value as `x` but with reversed sign.
+#[inline(always)]
+pub fn bid128_negate(x: BID128) -> BID128 {
+  unsafe { __bid128_negate(x) }
 }
 
 /// Returns s result of decimal floating-point multiplication, [Decimal128] * [Decimal128] -> [Decimal128]
