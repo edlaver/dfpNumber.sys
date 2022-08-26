@@ -266,6 +266,46 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_quiet_greater_0001() {
+    let x = d128("2.3456");
+    let y = d128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_greater(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_greater_0002() {
+    let x = d128("2.34561");
+    let y = d128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_greater(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_less_0001() {
+    let x = d128("2.3456");
+    let y = d128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_less(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_less_0002() {
+    let x = d128("2.3456");
+    let y = d128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_less(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  #[test]
   fn test_bid128_scalbn_0001() {
     let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
     eq("+2356789100E-9", x);
