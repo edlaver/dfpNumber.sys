@@ -166,6 +166,16 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_minnum_0001() {
+    let x = d128("1.2340000000");
+    let y = d128("2.256000");
+    let mut flags = FB_CLEAR;
+    let z = bid128_minnum(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq("+12340000000E-10", z);
+  }
+
+  #[test]
   fn test_bid128_mul_0001() {
     let x = bid128_from_int32(2);
     let y = bid128_from_int32(5);
