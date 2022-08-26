@@ -53,6 +53,7 @@ fn main() {
     .flag_if_supported("-Wno-shift-negative-value")
     .flag_if_supported("-Wno-comment")
     .flag_if_supported("-Wno-parentheses")
+    .flag_if_supported("-Wno-maybe-uninitialized")
     .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_exception.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_four_over_pi.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_bessel.c")
