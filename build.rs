@@ -12,6 +12,8 @@
  * SOFTWARE.
  */
 
+use std::path::PathBuf;
+
 #[cfg(not(feature = "call-by-reference"))]
 const DECIMAL_CALL_BY_REFERENCE: &str = "0";
 #[cfg(feature = "call-by-reference")]
@@ -28,11 +30,16 @@ const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "0";
 const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "1";
 
 fn main() {
-  let output_dir = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
+  let output_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap());
   cc::Build::new()
     .define("DECIMAL_CALL_BY_REFERENCE", DECIMAL_CALL_BY_REFERENCE)
     .define("DECIMAL_GLOBAL_ROUNDING", DECIMAL_GLOBAL_ROUNDING)
     .define("DECIMAL_GLOBAL_EXCEPTION_FLAGS", DECIMAL_GLOBAL_EXCEPTION_FLAGS)
+    .define("UNCHANGED_BINARY_STATUS_FLAGS", "0")
+    .define("USE_COMPILER_F128_TYPE", "0")
+    .define("USE_COMPILER_F80_TYPE", "0")
+    .define("USE_NATIVE_QUAD_TYPE", "0")
+    .define("ia64", "1")
     .flag_if_supported("-Wno-unused-value")
     .flag_if_supported("-Wno-unused-variable")
     .flag_if_supported("-Wno-unused-but-set-variable")
@@ -42,6 +49,30 @@ fn main() {
     .flag_if_supported("-Wno-dangling-else")
     .flag_if_supported("-Wno-sign-compare")
     .flag_if_supported("-Wno-implicit-function-declaration")
+    .flag_if_supported("-Wno-unknown-pragmas")
+    .flag_if_supported("-Wno-shift-negative-value")
+    .flag_if_supported("-Wno-comment")
+    .flag_if_supported("-Wno-parentheses")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_exception.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_four_over_pi.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_bessel.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_bid.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_cbrt.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_erf.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_exp.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_int.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_inv_hyper.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_inv_trig.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_lgamma.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_log.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_mod.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_ops.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_ops_64.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_pow.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_powi.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_sqrt.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_trig.c")
+    .file("IntelRDFPMathLib20U2/LIBRARY/float128/sqrt_tab_t.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/src/bid128_2_str_tables.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/src/bid128_acos.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/src/bid128_acosh.c")
