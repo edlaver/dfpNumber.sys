@@ -16,7 +16,7 @@ mod tests_000 {
   }
 
   #[test]
-  fn test_add_0001() {
+  fn test_bid128_add_0001() {
     let x = bid128_from_int32(2);
     let y = bid128_from_int32(5);
     let mut flags: u32 = FlagBits::AllFlagsClear as u32;
@@ -48,6 +48,22 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_from_string_0001() {
+    let mut flags = FLAG_BITS_CLEAR;
+    let x = bid128_from_string("-123.45", 0, &mut flags);
+    assert_eq!(FLAG_BITS_CLEAR, flags);
+    eq("-12345E-2", x);
+  }
+
+  #[test]
+  fn test_bid128_from_string_0002() {
+    let mut flags = FLAG_BITS_CLEAR;
+    let x = bid128_from_string("-12345e-2", 0, &mut flags);
+    assert_eq!(FLAG_BITS_CLEAR, flags);
+    eq("-12345E-2", x);
+  }
+
+  #[test]
   fn test_bid128_from_uint32() {
     eq("+0E+0", bid128_from_uint32(0));
     eq("+1E+0", bid128_from_uint32(1));
@@ -64,7 +80,7 @@ mod tests_000 {
   }
 
   #[test]
-  fn test_mul_0001() {
+  fn test_bid128_mul_0001() {
     let x = bid128_from_int32(2);
     let y = bid128_from_int32(5);
     let mut flags: u32 = FlagBits::AllFlagsClear as u32;
@@ -74,7 +90,7 @@ mod tests_000 {
   }
 
   #[test]
-  fn test_mul_0002() {
+  fn test_bid128_mul_0002() {
     let x = bid128_from_int32(i32::MAX);
     let y = bid128_from_int32(i32::MAX);
     let mut flags: u32 = FlagBits::AllFlagsClear as u32;
@@ -84,7 +100,7 @@ mod tests_000 {
   }
 
   #[test]
-  fn test_mul_0003() {
+  fn test_bid128_mul_0003() {
     let x = bid128_from_int64(i64::MAX);
     let y = bid128_from_int64(i64::MAX);
     let mut flags: u32 = FlagBits::AllFlagsClear as u32;
@@ -94,7 +110,7 @@ mod tests_000 {
   }
 
   #[test]
-  fn test_mul_0004() {
+  fn test_bid128_mul_0004() {
     let x = bid128_scalbn(bid128_from_int64(235678910), -8);
     eq("+235678910E-8", x);
   }
