@@ -23,10 +23,10 @@ pub const FLAG_BITS_CLEAR: u32 = FlagBits::AllFlagsClear as u32;
 /// Error flags.
 #[repr(u32)]
 pub enum FlagBits {
-  Invalid = 0x01,
-  ZeroDivide = 0x04,
-  Overflow = 0x08,
-  Underflow = 0x10,
-  Inexact = 0x20,
-  AllFlagsClear = 0x00,
+  Invalid = 0x01,       // 1
+  ZeroDivide = 0x04,    // 4
+  Overflow = 0x08,      // 8
+  Underflow = 0x10,     // 16
+  Inexact = 0x20,       // 32
+  AllFlagsClear = 0x00, // 0
 }

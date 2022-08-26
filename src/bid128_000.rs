@@ -10,6 +10,7 @@ use std::ffi::{CStr, CString};
 #[rustfmt::skip]
 extern "C" {
   fn __bid128_add(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_from_int32(x: c_int) -> BID128;
   fn __bid128_from_int64(x: c_long) -> BID128;
   fn __bid128_from_string(s: *const c_char, round: c_uint, flags: *mut c_uint) -> BID128;
@@ -26,6 +27,12 @@ extern "C" {
 #[inline(always)]
 pub fn bid128_add(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_add(x, y, round, flags) }
+}
+
+/// Return the value of `e` raised to the `x`th power.
+#[inline(always)]
+pub fn bid128_exp(x: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_exp(x, round, flags) }
 }
 
 /// Convert 32-bit signed integer to 128-bit decimal floating-point number.
@@ -66,7 +73,7 @@ pub fn bid128_is_zero(x: BID128) -> bool {
   unsafe { __bid128_isZero(x) != 0 }
 }
 
-///
+/// Return natural logarithm of `x`.
 #[inline(always)]
 pub fn bid128_log(x: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_log(x, round, flags) }

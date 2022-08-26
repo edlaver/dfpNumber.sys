@@ -26,10 +26,37 @@ mod tests_000 {
   fn test_bid128_add_0001() {
     let x = bid128_from_int32(2);
     let y = bid128_from_int32(5);
-    let mut flags: u32 = FlagBits::AllFlagsClear as u32;
+    let mut flags = FLAG_BITS_CLEAR;
     let z = bid128_add(x, y, 0, &mut flags);
-    assert_eq!(FlagBits::AllFlagsClear as u32, flags);
+    assert_eq!(FLAG_BITS_CLEAR, flags);
     eq("+7E+0", z);
+  }
+
+  #[test]
+  fn test_bid128_exp_0001() {
+    let x = bid128_from_int32(0);
+    let mut flags = FLAG_BITS_CLEAR;
+    let z = bid128_exp(x, 0, &mut flags);
+    assert_eq!(FLAG_BITS_CLEAR, flags);
+    eq("+1E+0", z);
+  }
+
+  #[test]
+  fn test_bid128_exp_0002() {
+    let x = bid128_from_int32(1);
+    let mut flags = FLAG_BITS_CLEAR;
+    let z = bid128_exp(x, 0, &mut flags);
+    assert_eq!(FLAG_BITS_INEXACT, flags);
+    eq("+2718281828459045235360287471352662E-33", z);
+  }
+
+  #[test]
+  fn test_bid128_exp_0003() {
+    let x = d128("2.5");
+    let mut flags = FLAG_BITS_CLEAR;
+    let z = bid128_exp(x, 0, &mut flags);
+    assert_eq!(FLAG_BITS_INEXACT, flags);
+    eq("+1218249396070347343807017595116797E-32", z);
   }
 
   #[test]
