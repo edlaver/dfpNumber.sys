@@ -176,6 +176,16 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_maxnum_0001() {
+    let x = d128("1.234");
+    let y = d128("2.256");
+    let mut flags = FB_CLEAR;
+    let z = bid128_maxnum(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq("+2256E-3", z);
+  }
+
+  #[test]
   fn test_bid128_minnum_0001() {
     let x = d128("1.2340000000");
     let y = d128("2.256000");
@@ -286,6 +296,36 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_quiet_greater_equal_0001() {
+    let x = d128("2.3456");
+    let y = d128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_greater_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_greater_equal_0002() {
+    let x = d128("2.34561");
+    let y = d128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_greater_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_greater_equal_0003() {
+    let x = d128("2.3456");
+    let y = d128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_greater_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
+  #[test]
   fn test_bid128_quiet_less_0001() {
     let x = d128("2.3456");
     let y = d128("2.3456");
@@ -303,6 +343,36 @@ mod tests_000 {
     let z = bid128_quiet_less(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_less_equal_0001() {
+    let x = d128("2.3456");
+    let y = d128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_less_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_less_equal_0002() {
+    let x = d128("2.3456");
+    let y = d128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_less_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  #[test]
+  fn test_bid128_quiet_less_equal_0003() {
+    let x = d128("2.34561");
+    let y = d128("2.34560");
+    let mut flags = FB_CLEAR;
+    let z = bid128_quiet_less_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
   }
 
   #[test]

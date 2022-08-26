@@ -19,13 +19,16 @@ extern "C" {
   fn __bid128_from_uint64(x: c_ulong) -> BID128;
   fn __bid128_isZero (x: BID128) -> c_int;
   fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_maxnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_minnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_negate(x: BID128) -> BID128;
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quiet_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_greater(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  fn __bid128_quiet_greater_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_less(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  fn __bid128_quiet_less_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
   fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
@@ -93,6 +96,15 @@ pub fn bid128_log(x: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_log(x, round, flags) }
 }
 
+/// Returns the canonicalized floating-point number y if x < y,
+/// x if y < x, the canonicalized floating-point number if one operand
+/// is a floating-point number and the other a quiet NaN.
+/// Otherwise it is either x or y, canonicalized.
+#[inline(always)]
+pub fn bid128_maxnum(x: BID128, y: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_maxnum(x, y, flags) }
+}
+
 /// Returns the canonicalized floating-point number x if x < y,
 /// y if y < x, the canonicalized floating-point number if one operand
 /// is a floating-point number and the other a quiet NaN.
@@ -139,8 +151,22 @@ pub fn bid128_quiet_greater(x: BID128, y: BID128, flags: &mut u32) -> bool {
 /// Compares 128-bit decimal floating-point numbers for specified relation,
 /// does not signal invalid exception for quiet NaNs.
 #[inline(always)]
+pub fn bid128_quiet_greater_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
+  unsafe { __bid128_quiet_greater_equal(x, y, flags) != 0 }
+}
+
+/// Compares 128-bit decimal floating-point numbers for specified relation,
+/// does not signal invalid exception for quiet NaNs.
+#[inline(always)]
 pub fn bid128_quiet_less(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_less(x, y, flags) != 0 }
+}
+
+/// Compares 128-bit decimal floating-point numbers for specified relation,
+/// does not signal invalid exception for quiet NaNs.
+#[inline(always)]
+pub fn bid128_quiet_less_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
+  unsafe { __bid128_quiet_less_equal(x, y, flags) != 0 }
 }
 
 /// Returns `x * 10^n`.
