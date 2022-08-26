@@ -10,6 +10,7 @@ use std::ffi::{CStr, CString};
 #[rustfmt::skip]
 extern "C" {
   fn __bid128_add(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_div(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_from_int32(x: c_int) -> BID128;
   fn __bid128_from_int64(x: c_long) -> BID128;
@@ -23,6 +24,7 @@ extern "C" {
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
+  fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
 }
 
@@ -30,6 +32,12 @@ extern "C" {
 #[inline(always)]
 pub fn bid128_add(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_add(x, y, round, flags) }
+}
+
+/// Returns s result of decimal floating-point division, [Decimal128] / [Decimal128] -> [Decimal128]
+#[inline(always)]
+pub fn bid128_div(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_div(x, y, round, flags) }
 }
 
 /// Returns the value of `e` raised to the `x`th power.
@@ -115,6 +123,12 @@ pub fn bid128_quantize(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID
 #[inline(always)]
 pub fn bid128_scalbn(x: BID128, n: i32) -> BID128 {
   unsafe { __bid128_scalbn(x, n) }
+}
+
+/// Returns a result of decimal floating-point subtraction, [Decimal128] - [Decimal128] -> [Decimal128]
+#[inline(always)]
+pub fn bid128_sub(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_sub(x, y, round, flags) }
 }
 
 /// Converts 128-bit decimal floating-point value (binary encoding)

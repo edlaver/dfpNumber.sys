@@ -33,6 +33,16 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_div_0001() {
+    let x = bid128_from_int32(2);
+    let y = bid128_from_int32(5);
+    let mut flags = FB_CLEAR;
+    let z = bid128_div(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq("+4E-1", z);
+  }
+
+  #[test]
   fn test_bid128_exp_0001() {
     let x = bid128_from_int32(0);
     let mut flags = FB_CLEAR;
@@ -239,6 +249,16 @@ mod tests_000 {
   fn test_bid128_scalbn_0001() {
     let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
     eq("+2356789100E-9", x);
+  }
+
+  #[test]
+  fn test_bid128_sub_0001() {
+    let x = bid128_from_int32(2);
+    let y = bid128_from_int32(5);
+    let mut flags = FB_CLEAR;
+    let z = bid128_sub(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq("-3E+0", z);
   }
 
   #[test]
