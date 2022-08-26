@@ -16,9 +16,9 @@ mod tests_000 {
   }
 
   fn d128(s: &str) -> BID128 {
-    let mut flags = FLAG_BITS_CLEAR;
-    let x = bid128_from_string(s, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let x = bid128_from_string(s, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     x
   }
 
@@ -26,36 +26,36 @@ mod tests_000 {
   fn test_bid128_add_0001() {
     let x = bid128_from_int32(2);
     let y = bid128_from_int32(5);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_add(x, y, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_add(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("+7E+0", z);
   }
 
   #[test]
   fn test_bid128_exp_0001() {
     let x = bid128_from_int32(0);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_exp(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_exp(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("+1E+0", z);
   }
 
   #[test]
   fn test_bid128_exp_0002() {
     let x = bid128_from_int32(1);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_exp(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_INEXACT, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_exp(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_INEXACT, flags);
     eq("+2718281828459045235360287471352662E-33", z);
   }
 
   #[test]
   fn test_bid128_exp_0003() {
     let x = d128("2.5");
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_exp(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_INEXACT, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_exp(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_INEXACT, flags);
     eq("+1218249396070347343807017595116797E-32", z);
   }
 
@@ -83,17 +83,17 @@ mod tests_000 {
 
   #[test]
   fn test_bid128_from_string_0001() {
-    let mut flags = FLAG_BITS_CLEAR;
-    let x = bid128_from_string("-123.45", 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let x = bid128_from_string("-123.45", RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("-12345E-2", x);
   }
 
   #[test]
   fn test_bid128_from_string_0002() {
-    let mut flags = FLAG_BITS_CLEAR;
-    let x = bid128_from_string("-12345e-2", 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let x = bid128_from_string("-12345e-2", RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("-12345E-2", x);
   }
 
@@ -123,45 +123,45 @@ mod tests_000 {
   #[test]
   fn test_bid128_log_0001() {
     let x = bid128_from_int32(0);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_log(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_ZERO_DIVIDE, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_log(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_ZERO_DIVIDE, flags);
     eq("-Inf", z);
   }
 
   #[test]
   fn test_bid128_log_0002() {
     let x = bid128_from_int32(1);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_log(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_log(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("+0E+0", z);
   }
 
   #[test]
   fn test_bid128_log_0003() {
     let x = d128("2.7182818284590452353602874713527");
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_log(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_INEXACT, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_log(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_INEXACT, flags);
     eq("+1000000000000000000000000000000014E-33", z);
   }
 
   #[test]
   fn test_bid128_log_0004() {
     let x = d128("10.0");
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_log(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_INEXACT, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_log(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_INEXACT, flags);
     eq("+2302585092994045684017991454684364E-33", z);
   }
 
   #[test]
   fn test_bid128_log_0005() {
     let x = d128("+Inf");
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_log(x, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_log(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("+Inf", z);
   }
 
@@ -169,9 +169,9 @@ mod tests_000 {
   fn test_bid128_mul_0001() {
     let x = bid128_from_int32(2);
     let y = bid128_from_int32(5);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_mul(x, y, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_mul(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("+10E+0", z);
   }
 
@@ -179,9 +179,9 @@ mod tests_000 {
   fn test_bid128_mul_0002() {
     let x = bid128_from_int32(i32::MAX);
     let y = bid128_from_int32(i32::MAX);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_mul(x, y, 0, &mut flags);
-    assert_eq!(FLAG_BITS_CLEAR, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_mul(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
     eq("+4611686014132420609E+0", z);
   }
 
@@ -189,9 +189,9 @@ mod tests_000 {
   fn test_bid128_mul_0003() {
     let x = bid128_from_int64(i64::MAX);
     let y = bid128_from_int64(i64::MAX);
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_mul(x, y, 0, &mut flags);
-    assert_eq!(FLAG_BITS_INEXACT, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_mul(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_INEXACT, flags);
     eq("+8507059173023461584739690778423250E+4", z);
   }
 
@@ -199,9 +199,9 @@ mod tests_000 {
   fn test_bid128_quantize_0001() {
     let x = d128("2.3456");
     let y = d128("0.001");
-    let mut flags = FLAG_BITS_CLEAR;
-    let z = bid128_quantize(x, y, 0, &mut flags);
-    assert_eq!(FLAG_BITS_INEXACT, flags);
+    let mut flags = FB_CLEAR;
+    let z = bid128_quantize(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_INEXACT, flags);
     eq("+2346E-3", z);
   }
 
