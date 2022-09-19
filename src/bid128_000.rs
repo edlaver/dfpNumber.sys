@@ -9,6 +9,7 @@ use std::ffi::{CStr, CString};
 
 #[rustfmt::skip]
 extern "C" {
+  fn __bid128_abs(x: BID128) -> BID128;
   fn __bid128_add(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_div(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
@@ -17,6 +18,7 @@ extern "C" {
   fn __bid128_from_string(s: *const c_char, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_from_uint32(x: c_uint) -> BID128;
   fn __bid128_from_uint64(x: c_ulong) -> BID128;
+  fn __bid128_ilogb(x: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_isFinite(x: BID128) -> c_int;
   fn __bid128_isSigned(x: BID128) -> c_int;
   fn __bid128_isZero(x: BID128) -> c_int;
@@ -25,12 +27,14 @@ extern "C" {
   fn __bid128_minnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_negate(x: BID128) -> BID128;
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_pow(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quiet_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_greater(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_greater_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_less(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_less_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  fn __bid128_rem(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_round_integral_exact(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_round_integral_nearest_away(x: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_round_integral_nearest_even(x: BID128, flags: *mut c_uint) -> BID128;
@@ -38,8 +42,16 @@ extern "C" {
   fn __bid128_round_integral_positive(x: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_round_integral_zero(x: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
+  fn __bid128_sqrt(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
+}
+
+/// Copies a 128-bit decimal floating-point operand x to a destination in the same format,
+/// changing the sign to positive.
+#[inline(always)]
+pub fn bid128_abs(x: BID128) -> BID128 {
+  unsafe { __bid128_abs(x) }
 }
 
 /// Returns a result of decimal floating-point addition, [Decimal128] + [Decimal128] -> [Decimal128]
@@ -90,6 +102,13 @@ pub fn bid128_from_uint32(x: u32) -> BID128 {
 #[inline(always)]
 pub fn bid128_from_uint64(x: u64) -> BID128 {
   unsafe { __bid128_from_uint64(x) }
+}
+
+/// Returns the exponent e of x, a signed integral value, determined as though x
+/// were represented with infinite range and minimum exponent.
+#[inline(always)]
+pub fn bid128_ilogb(x: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_ilogb(x, flags) }
 }
 
 /// Returns `true` if and only if x is zero, subnormal or normal (not infinite or NaN).
@@ -146,6 +165,12 @@ pub fn bid128_mul(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_mul(x, y, round, flags) }
 }
 
+/// Returns decimal floating-point power.
+#[inline(always)]
+pub fn bid128_pow(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_pow(x, y, round, flags) }
+}
+
 /// Returns the number which is equal in value (except for any rounding) and sign
 /// to the first (left-hand) operand and which has an exponent set to be equal
 /// to the exponent of the second (right-hand) operand.
@@ -187,6 +212,12 @@ pub fn bid128_quiet_less(x: BID128, y: BID128, flags: &mut u32) -> bool {
 #[inline(always)]
 pub fn bid128_quiet_less_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_less_equal(x, y, flags) != 0 }
+}
+
+/// Returns decimal floating-point remainder.
+#[inline(always)]
+pub fn bid128_rem(x: BID128, y: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_rem(x, y, flags) }
 }
 
 /// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
@@ -235,6 +266,12 @@ pub fn bid128_round_integral_zero(x: BID128, flags: &mut u32) -> BID128 {
 #[inline(always)]
 pub fn bid128_scalbn(x: BID128, n: i32) -> BID128 {
   unsafe { __bid128_scalbn(x, n) }
+}
+
+/// Returns decimal floating-point square root.
+#[inline(always)]
+pub fn bid128_sqrt(x: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_sqrt(x, round, flags) }
 }
 
 /// Returns a result of decimal floating-point subtraction, [Decimal128] - [Decimal128] -> [Decimal128]

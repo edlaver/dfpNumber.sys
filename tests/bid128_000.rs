@@ -258,6 +258,11 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_pow() {
+    eq("+8E+0", bid128_pow(d128("2"), d128("3"), RM_NEAREST_EVEN, f!()));
+  }
+
+  #[test]
   fn test_bid128_quantize_0001() {
     let x = d128("2.3456");
     let y = d128("0.001");
@@ -491,6 +496,11 @@ mod tests_000 {
   fn test_bid128_scalbn_0001() {
     let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
     eq("+2356789100E-9", x);
+  }
+
+  #[test]
+  fn test_bid128_sqrt() {
+    eq("+1414213562373095048801688724209698E-33", bid128_sqrt(d128("2"), RM_NEAREST_EVEN, f!()));
   }
 
   #[test]
