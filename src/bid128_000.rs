@@ -18,6 +18,7 @@ extern "C" {
   fn __bid128_from_uint32(x: c_uint) -> BID128;
   fn __bid128_from_uint64(x: c_ulong) -> BID128;
   fn __bid128_isFinite(x: BID128) -> c_int;
+  fn __bid128_isSigned(x: BID128) -> c_int;
   fn __bid128_isZero(x: BID128) -> c_int;
   fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_maxnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
@@ -30,6 +31,12 @@ extern "C" {
   fn __bid128_quiet_greater_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_less(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_less_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  fn __bid128_round_integral_exact(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_round_integral_nearest_away(x: BID128, flags: *mut c_uint) -> BID128;
+  fn __bid128_round_integral_nearest_even(x: BID128, flags: *mut c_uint) -> BID128;
+  fn __bid128_round_integral_negative(x: BID128, flags: *mut c_uint) -> BID128;
+  fn __bid128_round_integral_positive(x: BID128, flags: *mut c_uint) -> BID128;
+  fn __bid128_round_integral_zero(x: BID128, flags: *mut c_uint) -> BID128;
   fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
   fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
@@ -89,6 +96,12 @@ pub fn bid128_from_uint64(x: u64) -> BID128 {
 #[inline(always)]
 pub fn bid128_is_finite(x: BID128) -> bool {
   unsafe { __bid128_isFinite(x) != 0 }
+}
+
+/// Returns `true` if and only if x has negative sign.
+#[inline(always)]
+pub fn bid128_is_signed(x: BID128) -> bool {
+  unsafe { __bid128_isSigned(x) != 0 }
 }
 
 /// Returns `true` if and only if `x` is `+0` or `-0`.
@@ -174,6 +187,48 @@ pub fn bid128_quiet_less(x: BID128, y: BID128, flags: &mut u32) -> bool {
 #[inline(always)]
 pub fn bid128_quiet_less_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_less_equal(x, y, flags) != 0 }
+}
+
+/// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
+/// in the same format, using the current rounding mode; signal inexact exceptions.
+#[inline(always)]
+pub fn bid128_round_integral_exact(x: BID128, round: u32, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_round_integral_exact(x, round, flags) }
+}
+
+/// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
+/// in the same format, using the rounding-to-nearest-away mode; do not signal inexact exceptions.
+#[inline(always)]
+pub fn bid128_round_integral_nearest_away(x: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_round_integral_nearest_away(x, flags) }
+}
+
+/// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
+/// in the same format, using the rounding-to-nearest-even mode; do not signal inexact exceptions.
+#[inline(always)]
+pub fn bid128_round_integral_nearest_even(x: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_round_integral_nearest_even(x, flags) }
+}
+
+/// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
+/// in the same format, using the rounding-down mode; do not signal inexact exceptions.
+#[inline(always)]
+pub fn bid128_round_integral_negative(x: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_round_integral_negative(x, flags) }
+}
+
+/// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
+/// in the same format, using the rounding-up mode; do not signal inexact exceptions.
+#[inline(always)]
+pub fn bid128_round_integral_positive(x: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_round_integral_positive(x, flags) }
+}
+
+/// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
+/// in the same format, using the rounding-to-zero mode; do not signal inexact exceptions.
+#[inline(always)]
+pub fn bid128_round_integral_zero(x: BID128, flags: &mut u32) -> BID128 {
+  unsafe { __bid128_round_integral_zero(x, flags) }
 }
 
 /// Returns `x * 10^n`.

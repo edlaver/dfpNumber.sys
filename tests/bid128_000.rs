@@ -9,6 +9,12 @@
 mod tests_000 {
   use dfp_number_sys::*;
 
+  macro_rules! f {
+    () => {
+      &mut FB_CLEAR.clone()
+    };
+  }
+
   fn eq(expected: &str, actual: BID128) {
     let mut flags: u32 = 0;
     assert_eq!(expected, bid128_to_string(actual, &mut flags));
@@ -379,6 +385,106 @@ mod tests_000 {
     let z = bid128_quiet_less_equal(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(!z);
+  }
+
+  #[test]
+  fn test_bid128_round_integral_nearest_away() {
+    eq("-2E+0", bid128_round_integral_nearest_away(d128("-1.75"), f!()));
+    eq("-2E+0", bid128_round_integral_nearest_away(d128("-1.5"), f!()));
+    eq("-1E+0", bid128_round_integral_nearest_away(d128("-1.25"), f!()));
+    eq("+1E+0", bid128_round_integral_nearest_away(d128("1.25"), f!()));
+    eq("+2E+0", bid128_round_integral_nearest_away(d128("1.5"), f!()));
+    eq("+2E+0", bid128_round_integral_nearest_away(d128("1.75"), f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_exact_nearest_away() {
+    eq("-2E+0", bid128_round_integral_exact(d128("-1.75"), RM_NEAREST_AWAY, f!()));
+    eq("-2E+0", bid128_round_integral_exact(d128("-1.5"), RM_NEAREST_AWAY, f!()));
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.25"), RM_NEAREST_AWAY, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.25"), RM_NEAREST_AWAY, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("1.5"), RM_NEAREST_AWAY, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("1.75"), RM_NEAREST_AWAY, f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_nearest_even() {
+    eq("-3E+0", bid128_round_integral_nearest_even(d128("-2.75"), f!()));
+    eq("-2E+0", bid128_round_integral_nearest_even(d128("-2.5"), f!()));
+    eq("-2E+0", bid128_round_integral_nearest_even(d128("-2.25"), f!()));
+    eq("+2E+0", bid128_round_integral_nearest_even(d128("2.25"), f!()));
+    eq("+2E+0", bid128_round_integral_nearest_even(d128("2.5"), f!()));
+    eq("+3E+0", bid128_round_integral_nearest_even(d128("2.75"), f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_exact_nearest_even() {
+    eq("-3E+0", bid128_round_integral_exact(d128("-2.75"), RM_NEAREST_EVEN, f!()));
+    eq("-2E+0", bid128_round_integral_exact(d128("-2.5"), RM_NEAREST_EVEN, f!()));
+    eq("-2E+0", bid128_round_integral_exact(d128("-2.25"), RM_NEAREST_EVEN, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("2.25"), RM_NEAREST_EVEN, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("2.5"), RM_NEAREST_EVEN, f!()));
+    eq("+3E+0", bid128_round_integral_exact(d128("2.75"), RM_NEAREST_EVEN, f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_positive() {
+    eq("-1E+0", bid128_round_integral_positive(d128("-1.75"), f!()));
+    eq("-1E+0", bid128_round_integral_positive(d128("-1.5"), f!()));
+    eq("-1E+0", bid128_round_integral_positive(d128("-1.25"), f!()));
+    eq("+2E+0", bid128_round_integral_positive(d128("1.25"), f!()));
+    eq("+2E+0", bid128_round_integral_positive(d128("1.5"), f!()));
+    eq("+2E+0", bid128_round_integral_positive(d128("1.75"), f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_exact_upward() {
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.75"), RM_UPWARD, f!()));
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.5"), RM_UPWARD, f!()));
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.25"), RM_UPWARD, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("1.25"), RM_UPWARD, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("1.5"), RM_UPWARD, f!()));
+    eq("+2E+0", bid128_round_integral_exact(d128("1.75"), RM_UPWARD, f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_negative() {
+    eq("-2E+0", bid128_round_integral_negative(d128("-1.75"), f!()));
+    eq("-2E+0", bid128_round_integral_negative(d128("-1.5"), f!()));
+    eq("-2E+0", bid128_round_integral_negative(d128("-1.25"), f!()));
+    eq("+1E+0", bid128_round_integral_negative(d128("1.25"), f!()));
+    eq("+1E+0", bid128_round_integral_negative(d128("1.5"), f!()));
+    eq("+1E+0", bid128_round_integral_negative(d128("1.75"), f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_downward() {
+    eq("-2E+0", bid128_round_integral_exact(d128("-1.75"), RM_DOWNWARD, f!()));
+    eq("-2E+0", bid128_round_integral_exact(d128("-1.5"), RM_DOWNWARD, f!()));
+    eq("-2E+0", bid128_round_integral_exact(d128("-1.25"), RM_DOWNWARD, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.25"), RM_DOWNWARD, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.5"), RM_DOWNWARD, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.75"), RM_DOWNWARD, f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_zero() {
+    eq("-1E+0", bid128_round_integral_zero(d128("-1.75"), f!()));
+    eq("-1E+0", bid128_round_integral_zero(d128("-1.5"), f!()));
+    eq("-1E+0", bid128_round_integral_zero(d128("-1.25"), f!()));
+    eq("+1E+0", bid128_round_integral_zero(d128("1.25"), f!()));
+    eq("+1E+0", bid128_round_integral_zero(d128("1.5"), f!()));
+    eq("+1E+0", bid128_round_integral_zero(d128("1.75"), f!()));
+  }
+
+  #[test]
+  fn test_bid128_round_integral_toward_zero() {
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.75"), RM_TOWARD_ZERO, f!()));
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.5"), RM_TOWARD_ZERO, f!()));
+    eq("-1E+0", bid128_round_integral_exact(d128("-1.25"), RM_TOWARD_ZERO, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.25"), RM_TOWARD_ZERO, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.5"), RM_TOWARD_ZERO, f!()));
+    eq("+1E+0", bid128_round_integral_exact(d128("1.75"), RM_TOWARD_ZERO, f!()));
   }
 
   #[test]
