@@ -124,6 +124,12 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_is_finite() {
+    assert!(bid128_is_finite(bid128_from_int32(-1)));
+    assert!(!bid128_is_finite(d128("NaN")));
+  }
+
+  #[test]
   fn test_bid128_is_zero() {
     assert!(!bid128_is_zero(bid128_from_int32(-1)));
     assert!(bid128_is_zero(bid128_from_int32(0)));
