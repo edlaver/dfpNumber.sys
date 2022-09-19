@@ -9,29 +9,29 @@ use std::ffi::{CStr, CString};
 
 #[rustfmt::skip]
 extern "C" {
-  fn __bid128_add(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_div(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_from_int32(x: c_int) -> BID128;
-  fn __bid128_from_int64(x: c_long) -> BID128;
-  fn __bid128_from_string(s: *const c_char, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_from_uint32(x: c_uint) -> BID128;
-  fn __bid128_from_uint64(x: c_ulong) -> BID128;
-  fn __bid128_isZero (x: BID128) -> c_int;
-  fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_maxnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
-  fn __bid128_minnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
-  fn __bid128_negate(x: BID128) -> BID128;
-  fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_quiet_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
-  fn __bid128_quiet_greater(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
-  fn __bid128_quiet_greater_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
-  fn __bid128_quiet_less(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
-  fn __bid128_quiet_less_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
-  fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
-  fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
-  fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
+  pub fn __bid128_add(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_div(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_from_int32(x: c_int) -> BID128;
+  pub fn __bid128_from_int64(x: c_long) -> BID128;
+  pub fn __bid128_from_string(s: *const c_char, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_from_uint32(x: c_uint) -> BID128;
+  pub fn __bid128_from_uint64(x: c_ulong) -> BID128;
+  pub fn __bid128_isZero (x: BID128) -> c_int;
+  pub fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_maxnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_minnum(x: BID128, y: BID128, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_negate(x: BID128) -> BID128;
+  pub fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_quiet_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  pub fn __bid128_quiet_greater(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  pub fn __bid128_quiet_greater_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  pub fn __bid128_quiet_less(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  pub fn __bid128_quiet_less_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
+  pub fn __bid128_scalbn(x: BID128, n: c_int) -> BID128;
+  pub fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  pub fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
 }
 
 /// Returns a result of decimal floating-point addition, [Decimal128] + [Decimal128] -> [Decimal128]
