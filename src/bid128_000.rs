@@ -11,6 +11,7 @@ use std::ffi::{CStr, CString};
 extern "C" {
   fn __bid128_abs(x: BID128) -> BID128;
   fn __bid128_add(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_copy(x: BID128) -> BID128;
   fn __bid128_div(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_from_int32(x: c_int) -> BID128;
@@ -28,6 +29,8 @@ extern "C" {
   fn __bid128_negate(x: BID128) -> BID128;
   fn __bid128_mul(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_pow(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
+  fn __bid128_quantexp(x: BID128) -> c_int;
+  fn __bid128_quantum(x: BID128) -> BID128;
   fn __bid128_quantize(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_quiet_equal(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_quiet_greater(x: BID128, y: BID128, flags: *mut c_uint) -> c_int;
@@ -59,6 +62,12 @@ pub fn bid128_abs(x: BID128) -> BID128 {
 #[inline(always)]
 pub fn bid128_add(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_add(x, y, round, flags) }
+}
+
+/// Copies a decimal floating-point operand x to a destination in the same format, with no change.
+#[inline(always)]
+pub fn bid128_copy(x: BID128) -> BID128 {
+  unsafe { __bid128_copy(x) }
 }
 
 /// Returns s result of decimal floating-point division, [Decimal128] / [Decimal128] -> [Decimal128]
@@ -172,6 +181,19 @@ pub fn bid128_pow(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_pow(x, y, round, flags) }
 }
 
+/// Returns the quantum of a finite argument as a signed integer value.
+#[inline(always)]
+pub fn bid128_quantexp(x: BID128) -> i32 {
+  unsafe { __bid128_quantexp(x) }
+}
+
+/// Returns the quantum of a finite argument.
+/// If x is infinite, the result is +Inf. If x is NaN, the result is NaN.
+#[inline(always)]
+pub fn bid128_quantum(x: BID128) -> BID128 {
+  unsafe { __bid128_quantum(x) }
+}
+
 /// Returns the number which is equal in value (except for any rounding) and sign
 /// to the first (left-hand) operand and which has an exponent set to be equal
 /// to the exponent of the second (right-hand) operand.
@@ -281,8 +303,8 @@ pub fn bid128_sub(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_sub(x, y, round, flags) }
 }
 
-/// Convert 128-bit decimal floating-point value to 32-bit signed integer in rounding-to-zero;
-/// inexact exceptions not signaled.
+/// Convert 128-bit decimal floating-point value to 32-bit signed integer
+/// in rounding-to-zero, inexact exceptions are not signaled.
 #[inline(always)]
 pub fn bid128_to_int32_int(x: BID128, flags: &mut u32) -> i32 {
   unsafe { __bid128_to_int32_int(x, flags) }
@@ -298,3 +320,227 @@ pub fn bid128_to_string(x: BID128, flags: &mut u32) -> String {
     CStr::from_ptr(buf.as_ptr() as *const c_char).to_string_lossy().into_owned()
   }
 }
+
+/*
+
+__bid128_abs
+__bid128_acos
+__bid128_acosh
+__bid128_add
+__bid128_asin
+__bid128_asinh
+__bid128_atan
+__bid128_atan2
+__bid128_atanh
+__bid128_cbrt
+__bid128_class
+__bid128_copy
+__bid128_copySign
+__bid128_cos
+__bid128_cosh
+__bid128_div
+__bid128_erf
+__bid128_erfc
+__bid128_exp
+__bid128_exp10
+__bid128_exp2
+__bid128_expm1
+__bid128_fdim
+__bid128_fma
+__bid128_fmod
+__bid128_frexp
+__bid128_from_int32
+__bid128_from_int64
+__bid128_from_string
+__bid128_from_uint32
+__bid128_from_uint64
+__bid128_hypot
+__bid128_ilogb
+__bid128_inf
+__bid128_isCanonical
+__bid128_isFinite
+__bid128_isInf
+__bid128_isNaN
+__bid128_isNormal
+__bid128_isSignaling
+__bid128_isSigned
+__bid128_isSubnormal
+__bid128_isZero
+__bid128_ldexp
+__bid128_lgamma
+__bid128_llquantexp
+__bid128_llrint
+__bid128_llround
+__bid128_log
+__bid128_log10
+__bid128_log1p
+__bid128_log2
+__bid128_logb
+__bid128_lrint
+__bid128_lround
+__bid128_maxnum
+__bid128_maxnum_mag
+__bid128_minnum
+__bid128_minnum_mag
+__bid128_modf
+__bid128_mul
+__bid128_nan
+__bid128_nearbyint
+__bid128_negate
+__bid128_nextafter
+__bid128_nextdown
+__bid128_nexttoward
+__bid128_nextup
+__bid128_pow
+__bid128_quantexp
+__bid128_quantize
+__bid128_quiet_equal
+__bid128_quiet_greater
+__bid128_quiet_greater_equal
+__bid128_quiet_greater_unordered
+__bid128_quiet_less
+__bid128_quiet_less_equal
+__bid128_quiet_less_unordered
+__bid128_quiet_not_equal
+__bid128_quiet_not_greater
+__bid128_quiet_not_less
+__bid128_quiet_ordered
+__bid128_quiet_unordered
+__bid128_radix
+__bid128_rem
+__bid128_round_integral_exact
+__bid128_round_integral_nearest_away
+__bid128_round_integral_nearest_even
+__bid128_round_integral_negative
+__bid128_round_integral_positive
+__bid128_round_integral_zero
+__bid128_sameQuantum
+__bid128_scalbln
+__bid128_scalbn
+__bid128_signaling_greater
+__bid128_signaling_greater_equal
+__bid128_signaling_greater_unordered
+__bid128_signaling_less
+__bid128_signaling_less_equal
+__bid128_signaling_less_unordered
+__bid128_signaling_not_greater
+__bid128_signaling_not_less
+__bid128_sin
+__bid128_sinh
+__bid128_sqrt
+__bid128_sub
+__bid128_tan
+__bid128_tanh
+__bid128_tgamma
+__bid128_to_bid32
+__bid128_to_bid64
+__bid128_to_binary128
+__bid128_to_binary32
+__bid128_to_binary64
+__bid128_to_binary80
+__bid128_to_int16_ceil
+__bid128_to_int16_floor
+__bid128_to_int16_int
+__bid128_to_int16_rnint
+__bid128_to_int16_rninta
+__bid128_to_int16_xceil
+__bid128_to_int16_xfloor
+__bid128_to_int16_xint
+__bid128_to_int16_xrnint
+__bid128_to_int16_xrninta
+__bid128_to_int32_ceil
+__bid128_to_int32_floor
+__bid128_to_int32_int
+__bid128_to_int32_rnint
+__bid128_to_int32_rninta
+__bid128_to_int32_xceil
+__bid128_to_int32_xfloor
+__bid128_to_int32_xint
+__bid128_to_int32_xrnint
+__bid128_to_int32_xrninta
+__bid128_to_int64_ceil
+__bid128_to_int64_floor
+__bid128_to_int64_int
+__bid128_to_int64_rnint
+__bid128_to_int64_rninta
+__bid128_to_int64_xceil
+__bid128_to_int64_xfloor
+__bid128_to_int64_xint
+__bid128_to_int64_xrnint
+__bid128_to_int64_xrninta
+__bid128_to_int8_ceil
+__bid128_to_int8_floor
+__bid128_to_int8_int
+__bid128_to_int8_rnint
+__bid128_to_int8_rninta
+__bid128_to_int8_xceil
+__bid128_to_int8_xfloor
+__bid128_to_int8_xint
+__bid128_to_int8_xrnint
+__bid128_to_int8_xrninta
+__bid128_to_string
+__bid128_to_uint16_ceil
+__bid128_to_uint16_floor
+__bid128_to_uint16_int
+__bid128_to_uint16_rnint
+__bid128_to_uint16_rninta
+__bid128_to_uint16_xceil
+__bid128_to_uint16_xfloor
+__bid128_to_uint16_xint
+__bid128_to_uint16_xrnint
+__bid128_to_uint16_xrninta
+__bid128_to_uint32_ceil
+__bid128_to_uint32_floor
+__bid128_to_uint32_int
+__bid128_to_uint32_rnint
+__bid128_to_uint32_rninta
+__bid128_to_uint32_xceil
+__bid128_to_uint32_xfloor
+__bid128_to_uint32_xint
+__bid128_to_uint32_xrnint
+__bid128_to_uint32_xrninta
+__bid128_to_uint64_ceil
+__bid128_to_uint64_floor
+__bid128_to_uint64_int
+__bid128_to_uint64_rnint
+__bid128_to_uint64_rninta
+__bid128_to_uint64_xceil
+__bid128_to_uint64_xfloor
+__bid128_to_uint64_xint
+__bid128_to_uint64_xrnint
+__bid128_to_uint64_xrninta
+__bid128_to_uint8_ceil
+__bid128_to_uint8_floor
+__bid128_to_uint8_int
+__bid128_to_uint8_rnint
+__bid128_to_uint8_rninta
+__bid128_to_uint8_xceil
+__bid128_to_uint8_xfloor
+__bid128_to_uint8_xint
+__bid128_to_uint8_xrnint
+__bid128_to_uint8_xrninta
+__bid128_totalOrder
+__bid128_totalOrderMag
+__bid128d_sqrt
+__bid128dd_add
+__bid128dd_div
+__bid128dd_mul
+__bid128dd_sub
+__bid128ddd_fma
+__bid128ddq_fma
+__bid128dq_add
+__bid128dq_div
+__bid128dq_mul
+__bid128dq_sub
+__bid128dqd_fma
+__bid128dqq_fma
+__bid128qd_add
+__bid128qd_div
+__bid128qd_mul
+__bid128qd_sub
+__bid128qdd_fma
+__bid128qdq_fma
+__bid128qqd_fma
+
+
+*/
