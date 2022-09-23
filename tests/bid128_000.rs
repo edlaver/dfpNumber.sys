@@ -82,6 +82,15 @@ mod tests_000 {
   }
 
   #[test]
+  fn test_bid128_frexp() {
+    let x = d128("25.4300");
+    let mut exp = 0_i32;
+    let z = bid128_frexp(x, &mut exp);
+    eq("+254300E-6", z);
+    assert_eq!(2, exp);
+  }
+
+  #[test]
   fn test_bid128_from_int32() {
     eq("-2147483648E+0", bid128_from_int32(i32::MIN));
     eq("-10E+0", bid128_from_int32(-10));
@@ -133,6 +142,12 @@ mod tests_000 {
     eq("+1E+0", bid128_from_uint64(1));
     eq("+10E+0", bid128_from_uint64(10));
     eq("+18446744073709551615E+0", bid128_from_uint64(u64::MAX));
+  }
+
+  #[test]
+  fn test_bid128_ilogb() {
+    assert_eq!(-308, bid128_ilogb(d128("2.22507E-308"), f!()));
+    assert_eq!(1, bid128_ilogb(d128("22.200"), f!()));
   }
 
   #[test]
@@ -536,5 +551,67 @@ mod tests_000 {
     let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
     let y = bid128_scalbn(x, 2);
     eq("+2356789100E-7", y);
+  }
+
+  #[test]
+  fn test_bid128_to_int32_int() {
+    assert_eq!(0, bid128_to_int32_int(d128("0"), f!()));
+    assert_eq!(0, bid128_to_int32_int(d128("0.12"), f!()));
+    assert_eq!(0, bid128_to_int32_int(d128("0.99"), f!()));
+    assert_eq!(0, bid128_to_int32_int(d128("-0.12"), f!()));
+    assert_eq!(0, bid128_to_int32_int(d128("-0.99"), f!()));
+    assert_eq!(2147483647, bid128_to_int32_int(d128("2147483647.999"), f!()));
+    assert_eq!(-2147483648, bid128_to_int32_int(d128("-2147483648.999"), f!()));
+    let mut flags = FB_CLEAR;
+    assert_eq!(-2147483648, bid128_to_int32_int(d128("21474836483453459382.7423947"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(-2147483648, bid128_to_int32_int(d128("-21474836483453459.3827423947"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+  }
+
+  #[test]
+  fn test_bid128_to_uint32_int() {
+    assert_eq!(0, bid128_to_uint32_int(d128("0"), f!()));
+    assert_eq!(0, bid128_to_uint32_int(d128("0.12"), f!()));
+    assert_eq!(0, bid128_to_uint32_int(d128("0.99"), f!()));
+    assert_eq!(4294967295, bid128_to_uint32_int(d128("4294967295.999"), f!()));
+    let mut flags = FB_CLEAR;
+    assert_eq!(2147483648, bid128_to_uint32_int(d128("214748364834534593829384"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(2147483648, bid128_to_uint32_int(d128("-21474836483453459.3827423947"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+  }
+
+  #[test]
+  fn test_bid128_to_int64_int() {
+    assert_eq!(0, bid128_to_int64_int(d128("0"), f!()));
+    assert_eq!(0, bid128_to_int64_int(d128("0.12"), f!()));
+    assert_eq!(0, bid128_to_int64_int(d128("0.99"), f!()));
+    assert_eq!(0, bid128_to_int64_int(d128("-0.12"), f!()));
+    assert_eq!(0, bid128_to_int64_int(d128("-0.99"), f!()));
+    assert_eq!(9223372036854775807, bid128_to_int64_int(d128("9223372036854775807.999"), f!()));
+    assert_eq!(-9223372036854775808, bid128_to_int64_int(d128("-9223372036854775808.999"), f!()));
+    let mut flags = FB_CLEAR;
+    assert_eq!(-9223372036854775808, bid128_to_int64_int(d128("921474836483453459382349857.74239"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(-9223372036854775808, bid128_to_int64_int(d128("-9214748364834534599487453534.3827"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+  }
+
+  #[test]
+  fn test_bid128_to_uint64_int() {
+    assert_eq!(0, bid128_to_uint64_int(d128("0"), f!()));
+    assert_eq!(0, bid128_to_uint64_int(d128("0.12"), f!()));
+    assert_eq!(0, bid128_to_uint64_int(d128("0.99"), f!()));
+    assert_eq!(18446744073709551615, bid128_to_uint64_int(d128("18446744073709551615.999"), f!()));
+    let mut flags = FB_CLEAR;
+    assert_eq!(9223372036854775808, bid128_to_uint64_int(d128("3498375214748364834534593829384"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(9223372036854775808, bid128_to_uint64_int(d128("-21474836483453459.3827423947"), &mut flags));
+    assert_eq!(FB_INVALID, flags);
   }
 }
