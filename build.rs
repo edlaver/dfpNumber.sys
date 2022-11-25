@@ -39,6 +39,13 @@ const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "0";
 #[cfg(feature = "global-exception-flags")]
 const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "1";
 
+#[cfg(target_os = "linux")]
+const OPERATING_SYSTEM: &str = "linux";
+#[cfg(target_os = "windows")]
+const OPERATING_SYSTEM: &str = "win64";
+#[cfg(target_os = "macos")]
+const OPERATING_SYSTEM: &str = "darwin";
+
 fn main() {
   let output_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap());
   cc::Build::new()
@@ -50,6 +57,7 @@ fn main() {
     .define("USE_COMPILER_F80_TYPE", "0")
     .define("USE_NATIVE_QUAD_TYPE", "0")
     .define("ia64", "1")
+    .define(OPERATING_SYSTEM, "1")
     .flag_if_supported("-Wno-unused-value")
     .flag_if_supported("-Wno-unused-variable")
     .flag_if_supported("-Wno-unused-but-set-variable")
