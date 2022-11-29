@@ -15,6 +15,6 @@ libc = "0.2.133"
 cc = "1.0.73"
 
 [features]
-call-by-reference = [] # Function arguments and return values will be passed by reference if this feature is set.
-global-rounding = [] # The value of the rounding mode will be stored in a global variable if this feature is set.
+call-by-reference = []      # Function arguments and return values will be passed by reference if this feature is set.
+global-rounding = []        # The value of the rounding mode will be stored in a global variable if this feature is set.
 global-exception-flags = [] # The value of the exception status flags will be stored in a global variable if this feature is set.
