@@ -33,210 +33,198 @@
 
 #if (defined(dos) || defined(DOS))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64 
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define dos 1
-#	define OP_SYSTEM dos
-
+    #define dos 1
+    #define OP_SYSTEM dos
 
 #elif (defined(vms) || defined(VMS))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef   win64
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define vms 2
-#	define OP_SYSTEM vms
-
+    #define vms 2
+    #define OP_SYSTEM vms
 
 #elif ( defined(wnt) || defined(WNT) || defined(winnt))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define wnt 3
-#	define OP_SYSTEM wnt
-
+    #define wnt 3
+    #define OP_SYSTEM wnt
 
 #elif (defined(linux) || defined(LINUX) || defined(__linux))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define linux 8
-#	define OP_SYSTEM linux
-
+    #define linux 8
+    #define OP_SYSTEM linux
 
 #elif (defined(osf) || defined(OSF) || defined(__osf__))
 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
-
-#	define osf 4
-#	define OP_SYSTEM osf
-
+    #define osf 4
+    #define OP_SYSTEM osf
 
 #elif (defined(hp_ux) || defined(HP_UX) || defined(__hpux) || defined(__HPUX))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define hp_ux 5
-#	define OP_SYSTEM hp_ux
-
+    #define hp_ux 5
+    #define OP_SYSTEM hp_ux
 
 #elif (defined(unicos) || defined(UNICOS))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define unicos 6
-#	define OP_SYSTEM unicos
-
+    #define unicos 6
+    #define OP_SYSTEM unicos
 
 #elif (defined(ultrix) || defined(ULTRIX))
 
-#	undef  dos
-#	undef  vms
-#	undef  wnt
-#	undef  osf
-#	undef  hp_ux
-#	undef  linux
-#	undef  unicos
-#	undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
-#	define ultrix 7
-#	define OP_SYSTEM ultrix
-
+    #define ultrix 7
+    #define OP_SYSTEM ultrix
 
 #elif (defined(win64) || defined(WIN64))
-#       undef  dos
-#       undef  vms
-#       undef  wnt
-#       undef  osf
-#       undef  hp_ux
-#       undef  linux
-#       undef  unicos
-#       undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
 
-#       define win64 9
-#       define OP_SYSTEM win64
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
 
+    #define win64 9
+    #define OP_SYSTEM win64
 
 #elif defined(__APPLE__) || defined(darwin)
-#       undef  dos
-#       undef  vms
-#       undef  wnt
-#       undef  osf
-#       undef  hp_ux
-#       undef  linux
-#       undef  unicos
-#       undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
 
-#       define darwin 10
-#       define OP_SYSTEM darwin
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
+
+    #define darwin 10
+    #define OP_SYSTEM darwin
 
 #elif defined(interix)
-#       undef  dos
-#       undef  vms
-#       undef  wnt
-#       undef  osf
-#       undef  hp_ux
-#       undef  linux
-#       undef  unicos
-#       undef  ultrix
-#       undef  win64
-#       undef  darwin 
-#       undef  interix 
 
-#       define interix 11
-#       define OP_SYSTEM interix
+    #undef  dos
+    #undef  vms
+    #undef  wnt
+    #undef  osf
+    #undef  hp_ux
+    #undef  linux
+    #undef  unicos
+    #undef  ultrix
+    #undef  win64
+    #undef  darwin
+    #undef  interix
+
+    #define interix 11
+    #define OP_SYSTEM interix
+
 #else
 
-#	error Operating system must be specified.
+    #error Operating system must be specified.
 
 #endif
 
-#define IS_UNIX ( \
-	OP_SYSTEM == hp_ux || \
-	OP_SYSTEM == linux || \
-	OP_SYSTEM == osf || \
-	OP_SYSTEM == ultrix || \
-	OP_SYSTEM == unicos \
-)
+#define IS_UNIX (OP_SYSTEM == hp_ux || OP_SYSTEM == linux || OP_SYSTEM == osf || OP_SYSTEM == ultrix || OP_SYSTEM == unicos)
 
 #endif  /* OP_SYSTEM_H */
 
