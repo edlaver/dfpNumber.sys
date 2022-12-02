@@ -56,7 +56,7 @@ fn main() {
     .define("USE_COMPILER_F128_TYPE", "0")
     .define("USE_COMPILER_F80_TYPE", "0")
     .define("USE_NATIVE_QUAD_TYPE", "0")
-    .define("ix86", None)
+    .define("ia64", None)
     .define(OPERATING_SYSTEM, None)
     .flag_if_supported("-Wno-attributes")
     .flag_if_supported("-Wno-unused-value")
