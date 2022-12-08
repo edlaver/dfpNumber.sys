@@ -46,3 +46,12 @@ fn bench_bid128_from_string_0002(b: &mut Bencher) {
     let _ = bid128_from_string("-0.45985E-6", round, &mut flags);
   });
 }
+
+#[bench]
+fn bench_bid128_from_string_0003(b: &mut Bencher) {
+  let mut flags = FB_CLEAR;
+  let round = RM_NEAREST_EVEN;
+  b.iter(|| {
+    let _ = bid128_from_string("9999999999999999999999999999999999", round, &mut flags);
+  });
+}
