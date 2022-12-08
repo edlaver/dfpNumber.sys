@@ -74,6 +74,8 @@ fn main() {
     .flag_if_supported("-Wno-parentheses")
     .flag_if_supported("-Wno-maybe-uninitialized")
     .flag_if_supported("-Wno-array-bounds")
+    .flag_if_supported("-Wno-constant-conversion")
+    .flag_if_supported("-Wno-sometimes-uninitialized")
     .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_exception.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_four_over_pi.c")
     .file("IntelRDFPMathLib20U2/LIBRARY/float128/dpml_ux_bessel.c")
