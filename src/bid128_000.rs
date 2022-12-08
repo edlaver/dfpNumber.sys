@@ -28,7 +28,7 @@
 //! - 0 pointer to status flags passed as argument.
 
 use crate::BID128;
-use libc::{c_char, c_int, c_long, c_uint, c_ulong};
+use libc::{c_char, c_int, c_longlong, c_uint, c_ulonglong};
 use std::ffi::{CStr, CString};
 
 #[rustfmt::skip]
@@ -40,10 +40,10 @@ extern "C" {
   fn __bid128_exp(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_frexp(x: BID128, exp: *mut c_int) -> BID128;
   fn __bid128_from_int32(x: c_int) -> BID128;
-  fn __bid128_from_int64(x: c_long) -> BID128;
+  fn __bid128_from_int64(x: c_longlong) -> BID128;
   fn __bid128_from_string(s: *const c_char, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_from_uint32(x: c_uint) -> BID128;
-  fn __bid128_from_uint64(x: c_ulong) -> BID128;
+  fn __bid128_from_uint64(x: c_ulonglong) -> BID128;
   fn __bid128_ilogb(x: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_isFinite(x: BID128) -> c_int;
   fn __bid128_isSigned(x: BID128) -> c_int;
@@ -74,8 +74,8 @@ extern "C" {
   fn __bid128_sub(x: BID128, y: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
   fn __bid128_to_int32_int(x: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_to_uint32_int(x: BID128, flags: *mut c_uint) -> c_uint;
-  fn __bid128_to_int64_int(x: BID128, flags: *mut c_uint) -> c_long;
-  fn __bid128_to_uint64_int(x: BID128, flags: *mut c_uint) -> c_ulong;
+  fn __bid128_to_int64_int(x: BID128, flags: *mut c_uint) -> c_longlong;
+  fn __bid128_to_uint64_int(x: BID128, flags: *mut c_uint) -> c_ulonglong;
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
 }
 
