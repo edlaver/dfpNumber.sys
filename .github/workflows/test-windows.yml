@@ -1,4 +1,4 @@
-name: Test-Ubuntu
+name: Test-Windows
 
 on:
   push:
