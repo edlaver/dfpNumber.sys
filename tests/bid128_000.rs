@@ -24,10 +24,13 @@
 
 //! # Sanity tests
 //!
-//! 000:
-/// - 0 arguments passed by value,
-/// - 0 rounding mode passed as argument,
-/// - 0 pointer to status flags passed as argument.
+//! ```text
+//! 0 0 0
+//! │ │ │
+//! │ │ └─ status flags passed as an argument
+//! │ └─── rounding mode passed as an argument
+//! └───── result returned by value
+/// ```
 
 #[cfg(all(not(feature = "call-by-reference"), not(feature = "global-rounding"), not(feature = "global-exception-flags")))]
 mod tests_000 {

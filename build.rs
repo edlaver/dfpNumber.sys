@@ -45,7 +45,7 @@ const ARCHITECTURE: &str = "ix86";
 #[cfg(target_os = "linux")]
 const OPERATING_SYSTEM: &str = "linux";
 #[cfg(target_os = "windows")]
-const OPERATING_SYSTEM: &str = "windows";
+const OPERATING_SYSTEM: &str = "win64";
 #[cfg(target_os = "macos")]
 const OPERATING_SYSTEM: &str = "darwin";
 
