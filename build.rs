@@ -39,13 +39,24 @@ const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "0";
 #[cfg(feature = "global-exception-flags")]
 const DECIMAL_GLOBAL_EXCEPTION_FLAGS: &str = "1";
 
+#[cfg(target_arch = "x86_64")]
+const ARCHITECTURE: &str = "ix86";
+
+#[cfg(target_os = "linux")]
+const OPERATING_SYSTEM: &str = "linux";
+#[cfg(target_os = "windows")]
+const OPERATING_SYSTEM: &str = "windows";
+#[cfg(target_os = "macos")]
+const OPERATING_SYSTEM: &str = "darwin";
+
 fn main() {
   let output_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap());
   cc::Build::new()
+    .define(ARCHITECTURE, None)
+    .define(OPERATING_SYSTEM, None)
     .define("DECIMAL_CALL_BY_REFERENCE", DECIMAL_CALL_BY_REFERENCE)
     .define("DECIMAL_GLOBAL_ROUNDING", DECIMAL_GLOBAL_ROUNDING)
     .define("DECIMAL_GLOBAL_EXCEPTION_FLAGS", DECIMAL_GLOBAL_EXCEPTION_FLAGS)
-    .define("ix86", None)
     .flag_if_supported("-Wno-attributes")
     .flag_if_supported("-Wno-unused-value")
     .flag_if_supported("-Wno-unused-variable")
