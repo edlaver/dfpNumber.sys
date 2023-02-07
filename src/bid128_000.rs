@@ -46,6 +46,8 @@ extern "C" {
   fn __bid128_from_uint64(x: c_ulonglong) -> BID128;
   fn __bid128_ilogb(x: BID128, flags: *mut c_uint) -> c_int;
   fn __bid128_isFinite(x: BID128) -> c_int;
+  fn __bid128_inf() -> BID128;
+  fn __bid128_isInf(x: BID128) -> c_int;
   fn __bid128_isSigned(x: BID128) -> c_int;
   fn __bid128_isZero(x: BID128) -> c_int;
   fn __bid128_log(x: BID128, round: c_uint, flags: *mut c_uint) -> BID128;
@@ -146,6 +148,16 @@ pub fn bid128_ilogb(x: BID128, flags: &mut u32) -> i32 {
 /// Returns `true` if and only if x is zero, subnormal or normal (not infinite or NaN).
 pub fn bid128_is_finite(x: BID128) -> bool {
   unsafe { __bid128_isFinite(x) != 0 }
+}
+
+/// Returns x with infinite value.
+pub fn bid128_inf() -> BID128 {
+  unsafe { __bid128_inf() }
+}
+
+/// Returns `true` if x is infinite.
+pub fn bid128_is_infinite(x: BID128) -> bool {
+  unsafe { __bid128_isInf(x) != 0 }
 }
 
 /// Returns `true` if and only if x has negative sign.
@@ -367,10 +379,8 @@ __bid128_from_uint32
 __bid128_from_uint64
 __bid128_hypot
 __bid128_ilogb
-__bid128_inf
 __bid128_isCanonical
 __bid128_isFinite
-__bid128_isInf
 __bid128_isNaN
 __bid128_isNormal
 __bid128_isSignaling

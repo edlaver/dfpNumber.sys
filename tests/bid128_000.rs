@@ -559,8 +559,15 @@ mod tests_000 {
   }
 
   #[test]
-  fn test_bid128_sqrt() {
+  fn test_bid128_sqrt_0001() {
     eq("+1414213562373095048801688724209698E-33", bid128_sqrt(d128("2"), RM_NEAREST_EVEN, f!()));
+  }
+
+  #[test]
+  fn test_bid128_sqrt_0002() {
+    let x = bid128_inf();
+    let y = bid128_sqrt(x, RM_NEAREST_EVEN, f!());
+    assert!(!bid128_is_finite(y));
   }
 
   #[test]
@@ -640,5 +647,12 @@ mod tests_000 {
     let mut flags = FB_CLEAR;
     assert_eq!(9223372036854775808, bid128_to_uint64_int(d128("-21474836483453459.3827423947"), &mut flags));
     assert_eq!(FB_INVALID, flags);
+  }
+
+  #[test]
+  fn test_bid128_infinite() {
+    let x = bid128_inf();
+    assert!(bid128_is_infinite(x));
+    assert!(!bid128_is_finite(x));
   }
 }

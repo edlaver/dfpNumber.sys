@@ -1,6 +1,6 @@
 [package]
 name = "dfp-number-sys"
-version = "0.0.12"
+version = "0.0.13"
 authors = ["Dariusz Depta <code@senees.de>"]
 description = "Rust bindings for Intel(R) Decimal Floating-Point Math Library"
 documentation = "https://docs.rs/dfp-number-sys"
@@ -9,10 +9,10 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-libc = "0.2.133"
+libc = "0.2.138"
 
 [build-dependencies]
-cc = "1.0.73"
+cc = "1.0.77"
 
 [features]
 # Function arguments and return values will be passed by reference when this feature is set.
