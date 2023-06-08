@@ -103,6 +103,37 @@ fn __dec128_from_int64(x: c_longlong) -> DEC128 {
   return DEC128::from_i64(x).unwrap_or_default();
 }
 
+fn __dec128_from_uint32(x: c_uint) -> DEC128 {
+  return DEC128::from_u32(x).unwrap_or_default();
+}
+
+fn __dec128_from_uint64(x: c_ulonglong) -> DEC128 {
+  return DEC128::from_u64(x).unwrap_or_default();
+}
+
+// TODO: WTF is logb?
+// See: Intel implementation:
+// https://github.com/senees/dfpNumber.sys/blob/main/IntelRDFPMathLib20U2/LIBRARY/src/bid32_logb.c
+// And: https://cplusplus.com/reference/cmath/ilogb/ for reference...
+// And: https://alkis.github.io/decimal/src/decimal/dec128.rs.html#577
+//
+/// Returns the adjusted exponent of `self`, according to IEEE 754 rules. That is, the exponent
+/// returned is calculated as if the decimal point followed the first significant digit (so,
+/// for example, if `self` were 123 then the result would be 2). If `self` is infinite, the
+/// result is +Infinity. If `self` is a zero, the result is –Infinity, and the
+/// `DIVISION_BY_ZERO` flag is set. If `self` is less than zero, the absolute value of `self`
+/// is used. If `self` is 1, the result is 0. NaNs are handled (propagated) as for arithmetic
+/// operations.
+///
+// => d128::with_context(|ctx| unsafe { *decQuadLogB(&mut self, &self, ctx) })
+fn __dec128_ilogb(x: DEC128, flags: *mut c_uint) -> c_int {
+  // assert_eq!(-308, dec128_ilogb(d128("2.22507E-308"), f!()));
+  // assert_eq!(1, dec128_ilogb(d128("22.200"), f!()));
+
+  // TODO: Implement...
+  return 0;
+}
+
 // TODO: Implement rounding modes and flags for error codes:
 fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
   let split = s.splitn(2, |c| c == 'e' || c == 'E');
@@ -114,6 +145,8 @@ fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
     return DEC128::from_str(s).unwrap_or_default();
   }
 }
+
+/// End: Reimplemented functions ///
 
 /// Copies a 128-bit decimal floating-point operand x to a destination in the same format,
 /// changing the sign to positive.
@@ -179,16 +212,25 @@ pub fn dec128_from_string(s: &str, round: u32, flags: &mut u32) -> DEC128 {
 pub fn bid128_from_uint32(x: u32) -> BID128 {
   unsafe { __bid128_from_uint32(x) }
 }
+pub fn dec128_from_uint32(x: u32) -> DEC128 {
+  __dec128_from_uint32(x)
+}
 
 /// Converts 64-bit unsigned integer to 128-bit decimal floating-point number.
 pub fn bid128_from_uint64(x: u64) -> BID128 {
   unsafe { __bid128_from_uint64(x) }
+}
+pub fn dec128_from_uint64(x: u64) -> DEC128 {
+  __dec128_from_uint64(x)
 }
 
 /// Returns the exponent e of x, a signed integral value, determined as though x
 /// were represented with infinite range and minimum exponent.
 pub fn bid128_ilogb(x: BID128, flags: &mut u32) -> i32 {
   unsafe { __bid128_ilogb(x, flags) }
+}
+pub fn dec128_ilogb(x: DEC128, flags: &mut u32) -> i32 {
+  __dec128_ilogb(x, flags)
 }
 
 /// Returns `true` if and only if x is zero, subnormal or normal (not infinite or NaN).

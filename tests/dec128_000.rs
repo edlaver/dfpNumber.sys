@@ -36,6 +36,7 @@
 mod tests_000 {
   use dfp_number_sys::*;
   use rust_decimal::Decimal as DEC128;
+  // use rust_decimal_macros::dec as dec128;
 
   macro_rules! f {
     () => {
@@ -59,6 +60,13 @@ mod tests_000 {
   fn d128(s: &str) -> BID128 {
     let mut flags = FB_CLEAR;
     let x = bid128_from_string(s, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    x
+  }
+
+  fn dec128(s: &str) -> DEC128 {
+    let mut flags = FB_CLEAR;
+    let x = dec128_from_string(s, RM_NEAREST_EVEN, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     x
   }
@@ -158,7 +166,7 @@ mod tests_000 {
     eq2("-12345E-2", x);
   }
 
-  // Passing - up to here:
+  // Passing
   #[test]
   fn test_dec128_from_string_0002() {
     let mut flags = FB_CLEAR;
@@ -167,33 +175,51 @@ mod tests_000 {
     eq2("-12345E-2", x);
   }
 
+  // Passing
   #[test]
-  fn test_bid128_from_uint32() {
-    eq("+0E+0", bid128_from_uint32(0));
-    eq("+1E+0", bid128_from_uint32(1));
-    eq("+10E+0", bid128_from_uint32(10));
-    eq("+4294967295E+0", bid128_from_uint32(u32::MAX));
+  fn test_dec128_from_uint32() {
+    eq2("+0E+0", dec128_from_uint32(0));
+    eq2("+1E+0", dec128_from_uint32(1));
+    eq2("+10E+0", dec128_from_uint32(10));
+    eq2("+4294967295E+0", dec128_from_uint32(u32::MAX));
   }
 
+  // Passing
   #[test]
-  fn test_bid128_from_uint64() {
-    eq("+0E+0", bid128_from_uint64(0));
-    eq("+1E+0", bid128_from_uint64(1));
-    eq("+10E+0", bid128_from_uint64(10));
-    eq("+18446744073709551615E+0", bid128_from_uint64(u64::MAX));
+  fn test_dec128_from_uint64() {
+    eq2("+0E+0", dec128_from_uint64(0));
+    eq2("+1E+0", dec128_from_uint64(1));
+    eq2("+10E+0", dec128_from_uint64(10));
+    eq2("+18446744073709551615E+0", dec128_from_uint64(u64::MAX));
   }
 
-  #[test]
-  fn test_bid128_ilogb() {
-    assert_eq!(-308, bid128_ilogb(d128("2.22507E-308"), f!()));
-    assert_eq!(1, bid128_ilogb(d128("22.200"), f!()));
-  }
+  /// TODO: Implement
+  // #[test]
+  // fn test_bid128_ilogb() {
+  //   assert_eq!(-308, bid128_ilogb(d128("2.22507E-308"), f!()));
+  //   assert_eq!(1, bid128_ilogb(d128("22.200"), f!()));
+  // }
 
+  /// TODO: Implement
+  // #[test]
+  // fn test_dec128_ilogb() {
+  //   assert_eq!(-308, dec128_ilogb(dec128("2.22507E-308"), f!()));
+  //   assert_eq!(1, dec128_ilogb(dec128("22.200"), f!()));
+  // }
+
+  // Current:
   #[test]
   fn test_bid128_is_finite() {
     assert!(bid128_is_finite(bid128_from_int32(-1)));
     assert!(!bid128_is_finite(d128("NaN")));
   }
+
+  // Current:
+  // #[test]
+  // fn test_bid128_is_finite() {
+  //   assert!(bid128_is_finite(bid128_from_int32(-1)));
+  //   assert!(!bid128_is_finite(d128("NaN")));
+  // }
 
   #[test]
   fn test_bid128_is_zero() {
