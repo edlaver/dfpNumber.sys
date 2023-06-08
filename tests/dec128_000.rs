@@ -43,11 +43,13 @@ mod tests_000 {
     };
   }
 
+  // Original implementation for BI128
   fn eq(expected: &str, actual: BID128) {
     let mut flags: u32 = 0;
     assert_eq!(expected, bid128_to_string(actual, &mut flags));
     assert_eq!(0, flags);
   }
+  // Alternative implementation for DEC128:
   fn eq2(expected: &str, actual: DEC128) {
     let mut flags: u32 = 0;
     assert_eq!(expected, dec128_to_string(actual, &mut flags));
@@ -177,7 +179,7 @@ mod tests_000 {
     eq("-12345E-2", x);
   }
 
-  // Current
+  // Passing
   #[test]
   fn test_dec128_from_string_0001() {
     let mut flags = FB_CLEAR;
@@ -192,6 +194,15 @@ mod tests_000 {
     let x = bid128_from_string("-12345e-2", RM_NEAREST_EVEN, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     eq("-12345E-2", x);
+  }
+
+  // Passing - up to here:
+  #[test]
+  fn test_dec128_from_string_0002() {
+    let mut flags = FB_CLEAR;
+    let x = dec128_from_string("-12345e-2", RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq2("-12345E-2", x);
   }
 
   #[test]

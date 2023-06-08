@@ -102,7 +102,12 @@ fn __dec128_from_int64(x: c_longlong) -> DEC128 {
 }
 
 fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
-  return DEC128::from_str(s).unwrap_or_default();
+  let split = s.splitn(2, |c| c == 'e' || c == 'E');
+  if split.count() > 1 {
+    return DEC128::from_scientific(s).unwrap_or_default();
+  } else {
+    return DEC128::from_str(s).unwrap_or_default();
+  }
 }
 
 /// Copies a 128-bit decimal floating-point operand x to a destination in the same format,
