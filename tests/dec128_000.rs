@@ -125,17 +125,6 @@ mod tests_000 {
     assert_eq!(2, exp);
   }
 
-  #[test]
-  fn test_bid128_from_int32() {
-    eq("-2147483648E+0", bid128_from_int32(i32::MIN));
-    eq("-10E+0", bid128_from_int32(-10));
-    eq("-1E+0", bid128_from_int32(-1));
-    eq("+0E+0", bid128_from_int32(0));
-    eq("+1E+0", bid128_from_int32(1));
-    eq("+10E+0", bid128_from_int32(10));
-    eq("+2147483647E+0", bid128_from_int32(i32::MAX));
-  }
-
   // Passing:
   #[test]
   fn test_dec128_from_int32() {
@@ -146,17 +135,6 @@ mod tests_000 {
     eq2("+1E+0", dec128_from_int32(1));
     eq2("+10E+0", dec128_from_int32(10));
     eq2("+2147483647E+0", dec128_from_int32(i32::MAX));
-  }
-
-  #[test]
-  fn test_bid128_from_int64() {
-    eq("-9223372036854775808E+0", bid128_from_int64(i64::MIN));
-    eq("-10E+0", bid128_from_int64(-10));
-    eq("-1E+0", bid128_from_int64(-1));
-    eq("+0E+0", bid128_from_int64(0));
-    eq("+1E+0", bid128_from_int64(1));
-    eq("+10E+0", bid128_from_int64(10));
-    eq("+9223372036854775807E+0", bid128_from_int64(i64::MAX));
   }
 
   // Passing
@@ -171,14 +149,6 @@ mod tests_000 {
     eq2("+9223372036854775807E+0", dec128_from_int64(i64::MAX));
   }
 
-  #[test]
-  fn test_bid128_from_string_0001() {
-    let mut flags = FB_CLEAR;
-    let x = bid128_from_string("-123.45", RM_NEAREST_EVEN, &mut flags);
-    assert_eq!(FB_CLEAR, flags);
-    eq("-12345E-2", x);
-  }
-
   // Passing
   #[test]
   fn test_dec128_from_string_0001() {
@@ -186,14 +156,6 @@ mod tests_000 {
     let x = dec128_from_string("-123.45", RM_NEAREST_EVEN, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     eq2("-12345E-2", x);
-  }
-
-  #[test]
-  fn test_bid128_from_string_0002() {
-    let mut flags = FB_CLEAR;
-    let x = bid128_from_string("-12345e-2", RM_NEAREST_EVEN, &mut flags);
-    assert_eq!(FB_CLEAR, flags);
-    eq("-12345E-2", x);
   }
 
   // Passing - up to here:
