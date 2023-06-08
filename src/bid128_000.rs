@@ -29,7 +29,17 @@
 
 use crate::BID128;
 use libc::{c_char, c_int, c_longlong, c_uint, c_ulonglong};
-use std::ffi::{CStr, CString};
+use std::{
+  ffi::{CStr, CString},
+  num,
+  str::FromStr,
+};
+
+use rust_decimal::{
+  prelude::{FromPrimitive, ToPrimitive},
+  Decimal as DEC128,
+};
+use rust_decimal_macros::dec as dec128;
 
 #[rustfmt::skip]
 extern "C" {
@@ -81,6 +91,20 @@ extern "C" {
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
 }
 
+/// Reimplemented functions: ///
+/// fn __bid128_from_int32(x: c_int) -> BID128;
+fn __dec128_from_int32(x: c_int) -> DEC128 {
+  return DEC128::from_i32(x).unwrap_or_default();
+}
+
+fn __dec128_from_int64(x: c_longlong) -> DEC128 {
+  return DEC128::from_i64(x).unwrap_or_default();
+}
+
+fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return DEC128::from_str(s).unwrap_or_default();
+}
+
 /// Copies a 128-bit decimal floating-point operand x to a destination in the same format,
 /// changing the sign to positive.
 pub fn bid128_abs(x: BID128) -> BID128 {
@@ -116,10 +140,16 @@ pub fn bid128_frexp(x: BID128, exp: &mut i32) -> BID128 {
 pub fn bid128_from_int32(x: i32) -> BID128 {
   unsafe { __bid128_from_int32(x) }
 }
+pub fn dec128_from_int32(x: i32) -> DEC128 {
+  __dec128_from_int32(x)
+}
 
 /// Converts 64-bit signed integer to 128-bit decimal floating-point number.
 pub fn bid128_from_int64(x: i64) -> BID128 {
   unsafe { __bid128_from_int64(x) }
+}
+pub fn dec128_from_int64(x: i64) -> DEC128 {
+  __dec128_from_int64(x)
 }
 
 /// Converts a decimal floating-point value represented in string format (decimal character sequence)
@@ -127,6 +157,12 @@ pub fn bid128_from_int64(x: i64) -> BID128 {
 pub fn bid128_from_string(s: &str, round: u32, flags: &mut u32) -> BID128 {
   let c_s = CString::new(s).unwrap();
   unsafe { __bid128_from_string(c_s.as_ptr(), round, flags) }
+}
+
+/// Converts a decimal floating-point value represented in string format (decimal character sequence)
+/// to 128-bit decimal floating-point format (binary encoding).
+pub fn dec128_from_string(s: &str, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_from_string(s, round, flags)
 }
 
 /// Converts 32-bit unsigned integer to 128-bit decimal floating-point number.
@@ -342,6 +378,73 @@ pub fn bid128_to_string(x: BID128, flags: &mut u32) -> String {
     __bid128_to_string(buf.as_mut_ptr() as *mut c_char, x, flags);
     CStr::from_ptr(buf.as_ptr() as *const c_char).to_string_lossy().into_owned()
   }
+}
+pub fn dec128_to_string(x: DEC128, flags: &mut u32) -> String {
+  // return x.to_string();
+  // return format!("{:+0}", x);
+  // return format!("{:E}", x);
+  // return format!("{:+0e}", x);
+  // return format!("{:.prec$e}", x, prec = 0);
+  // let num = lexical::parse::<i128, _>(i128Num).unwrap();
+  // let num = lexical::parse::<i128, _>(x).unwrap();
+
+  // const FORMAT: u128 = lexical::format::STANDARD;
+  // let options = lexical::WriteFloatOptions::builder()
+  //   .exponent(b'E') // ?
+  //   .negative_exponent_break(num::NonZeroI32::new(0))
+  //   .trim_floats(true)
+  //   .build()
+  //   .unwrap(); // ?
+
+  // let num = x.to_f64().unwrap();
+  // // return lexical::to_string(num);
+  // return lexical::to_string_with_options::<_, FORMAT>(num, &options);
+
+  // let mut flags: u32 = 0;
+  // assert_eq!("-2147483648E+0", dec128_to_string(dec128_from_int32(i32::MIN), &mut flags));
+  // assert_eq!("-10E+0", dec128_to_string(dec128_from_int32(-10), &mut flags));
+  // assert_eq!("-1E+0", dec128_to_string(dec128_from_int32(-1), &mut flags));
+  // assert_eq!("+0E+0", dec128_to_string(dec128_from_int32(0), &mut flags));
+  // assert_eq!("+1E+0", dec128_to_string(dec128_from_int32(1), &mut flags));
+  // assert_eq!("+10E+0", dec128_to_string(dec128_from_int32(10), &mut flags));
+  // assert_eq!("+2147483647E+0", dec128_to_string(dec128_from_int32(i32::MAX), &mut flags));
+
+  // Working(ish) implementation from ChatGPT:
+  /*
+  let sign = if x.is_sign_negative() {
+    // *flags |= 1;
+    '-'
+  } else {
+    // *flags &= !1;
+    '+'
+  };
+
+  let mut string = x.abs().to_string();
+  let exponent = x.scale();
+
+  let mut decimal_index = string.len() - (exponent as usize);
+
+  if decimal_index <= 0 {
+    decimal_index = 0;
+    string = format!("{:0>width$}", string, width = (string.len() - decimal_index) + 1);
+  }
+
+  let mut decimal_part = String::new();
+  if decimal_index < string.len() {
+    decimal_part = string.split_off(decimal_index);
+    decimal_part.insert(0, '.');
+  }
+
+  format!("{}{}E+{}", sign, string, exponent) + &decimal_part
+  */
+
+  // My version:
+  let mantissa_sign = if x.is_sign_negative() { "" } else { "+" };
+  let mantissa = x.mantissa();
+  let scale = x.scale();
+  let scale_sign = if scale > 0 { '-' } else { '+' };
+
+  format!("{}{}E{}{}", mantissa_sign, mantissa, scale_sign, scale)
 }
 
 /*
