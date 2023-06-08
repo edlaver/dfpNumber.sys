@@ -94,18 +94,23 @@ extern "C" {
 /// Reimplemented functions: ///
 /// fn __bid128_from_int32(x: c_int) -> BID128;
 fn __dec128_from_int32(x: c_int) -> DEC128 {
+  // TODO: Don't use unwrap_or_default?
   return DEC128::from_i32(x).unwrap_or_default();
 }
 
 fn __dec128_from_int64(x: c_longlong) -> DEC128 {
+  // TODO: Don't use unwrap_or_default?
   return DEC128::from_i64(x).unwrap_or_default();
 }
 
+// TODO: Implement rounding modes and flags for error codes:
 fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
   let split = s.splitn(2, |c| c == 'e' || c == 'E');
   if split.count() > 1 {
+    // TODO: Don't use unwrap_or_default, use the flags to set the error code? (Match original implementation)
     return DEC128::from_scientific(s).unwrap_or_default();
   } else {
+    // TODO: Don't use unwrap_or_default, use the flags to set the error code? (Match original implementation)
     return DEC128::from_str(s).unwrap_or_default();
   }
 }
