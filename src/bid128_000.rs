@@ -380,65 +380,6 @@ pub fn bid128_to_string(x: BID128, flags: &mut u32) -> String {
   }
 }
 pub fn dec128_to_string(x: DEC128, flags: &mut u32) -> String {
-  // return x.to_string();
-  // return format!("{:+0}", x);
-  // return format!("{:E}", x);
-  // return format!("{:+0e}", x);
-  // return format!("{:.prec$e}", x, prec = 0);
-  // let num = lexical::parse::<i128, _>(i128Num).unwrap();
-  // let num = lexical::parse::<i128, _>(x).unwrap();
-
-  // const FORMAT: u128 = lexical::format::STANDARD;
-  // let options = lexical::WriteFloatOptions::builder()
-  //   .exponent(b'E') // ?
-  //   .negative_exponent_break(num::NonZeroI32::new(0))
-  //   .trim_floats(true)
-  //   .build()
-  //   .unwrap(); // ?
-
-  // let num = x.to_f64().unwrap();
-  // // return lexical::to_string(num);
-  // return lexical::to_string_with_options::<_, FORMAT>(num, &options);
-
-  // let mut flags: u32 = 0;
-  // assert_eq!("-2147483648E+0", dec128_to_string(dec128_from_int32(i32::MIN), &mut flags));
-  // assert_eq!("-10E+0", dec128_to_string(dec128_from_int32(-10), &mut flags));
-  // assert_eq!("-1E+0", dec128_to_string(dec128_from_int32(-1), &mut flags));
-  // assert_eq!("+0E+0", dec128_to_string(dec128_from_int32(0), &mut flags));
-  // assert_eq!("+1E+0", dec128_to_string(dec128_from_int32(1), &mut flags));
-  // assert_eq!("+10E+0", dec128_to_string(dec128_from_int32(10), &mut flags));
-  // assert_eq!("+2147483647E+0", dec128_to_string(dec128_from_int32(i32::MAX), &mut flags));
-
-  // Working(ish) implementation from ChatGPT:
-  /*
-  let sign = if x.is_sign_negative() {
-    // *flags |= 1;
-    '-'
-  } else {
-    // *flags &= !1;
-    '+'
-  };
-
-  let mut string = x.abs().to_string();
-  let exponent = x.scale();
-
-  let mut decimal_index = string.len() - (exponent as usize);
-
-  if decimal_index <= 0 {
-    decimal_index = 0;
-    string = format!("{:0>width$}", string, width = (string.len() - decimal_index) + 1);
-  }
-
-  let mut decimal_part = String::new();
-  if decimal_index < string.len() {
-    decimal_part = string.split_off(decimal_index);
-    decimal_part.insert(0, '.');
-  }
-
-  format!("{}{}E+{}", sign, string, exponent) + &decimal_part
-  */
-
-  // My version:
   let mantissa_sign = if x.is_sign_negative() { "" } else { "+" };
   let mantissa = x.mantissa();
   let scale = x.scale();
