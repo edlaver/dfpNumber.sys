@@ -215,10 +215,11 @@ mod tests_000 {
   }
 
   // Current:
+  /// TODO: Implement
   // #[test]
-  // fn test_bid128_is_finite() {
-  //   assert!(bid128_is_finite(bid128_from_int32(-1)));
-  //   assert!(!bid128_is_finite(d128("NaN")));
+  // fn test_dec128_is_finite() {
+  //   assert!(dec128_is_finite(dec128_from_int32(-1)));
+  //   assert!(!dec128_is_finite(dec128("NaN")));
   // }
 
   #[test]

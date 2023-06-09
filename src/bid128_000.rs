@@ -111,6 +111,11 @@ fn __dec128_from_uint64(x: c_ulonglong) -> DEC128 {
   return DEC128::from_u64(x).unwrap_or_default();
 }
 
+// TODO: Implement this properly.
+fn __dec128_is_finite(x: DEC128) -> c_int {
+  return 1;
+}
+
 // TODO: WTF is logb?
 // See: Intel implementation:
 // https://github.com/senees/dfpNumber.sys/blob/main/IntelRDFPMathLib20U2/LIBRARY/src/bid32_logb.c
@@ -236,6 +241,9 @@ pub fn dec128_ilogb(x: DEC128, flags: &mut u32) -> i32 {
 /// Returns `true` if and only if x is zero, subnormal or normal (not infinite or NaN).
 pub fn bid128_is_finite(x: BID128) -> bool {
   unsafe { __bid128_isFinite(x) != 0 }
+}
+pub fn dec128_is_finite(x: DEC128) -> bool {
+  __dec128_is_finite(x) != 0
 }
 
 /// Returns x with infinite value.
