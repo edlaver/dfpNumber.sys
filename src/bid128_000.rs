@@ -96,13 +96,13 @@ extern "C" {
 // [x] bid128_abs
 // [x] bid128_add
 // [x] bid128_div
-// [ ] bid128_exp
+// [-] bid128_exp
 // [x] bid128_from_int32
 // [x] bid128_from_int64
 // [x] bid128_from_string
 // [x] bid128_from_uint32
 // [x] bid128_from_uint64
-// bid128_inf
+// [ ] bid128_inf
 // [-] bid128_is_finite
 // bid128_is_zero
 // bid128_log
@@ -143,7 +143,10 @@ fn __dec128_div(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC1
 }
 
 fn __dec128_exp(x: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
-  let result = x.exp();
+  // let result = x.exp();
+  // Based on: https://github.com/paupino/rust-decimal/blob/714db9c4ccc83b742cb7613d12825dd82e845e8e/src/maths.rs#L5
+  const EXP_TOLERANCE: DEC128 = DEC128::from_parts(2, 0, 0, false, 28);
+  let result = x.exp_with_tolerance(EXP_TOLERANCE);
   return result;
 }
 
