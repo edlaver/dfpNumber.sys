@@ -153,29 +153,6 @@ fn __dec128_is_finite(x: DEC128) -> c_int {
   return 1;
 }
 
-// TODO: WTF is logb?
-// See: Intel implementation:
-// https://github.com/senees/dfpNumber.sys/blob/main/IntelRDFPMathLib20U2/LIBRARY/src/bid32_logb.c
-// And: https://cplusplus.com/reference/cmath/ilogb/ for reference...
-// And: https://alkis.github.io/decimal/src/decimal/dec128.rs.html#577
-//
-/// Returns the adjusted exponent of `self`, according to IEEE 754 rules. That is, the exponent
-/// returned is calculated as if the decimal point followed the first significant digit (so,
-/// for example, if `self` were 123 then the result would be 2). If `self` is infinite, the
-/// result is +Infinity. If `self` is a zero, the result is –Infinity, and the
-/// `DIVISION_BY_ZERO` flag is set. If `self` is less than zero, the absolute value of `self`
-/// is used. If `self` is 1, the result is 0. NaNs are handled (propagated) as for arithmetic
-/// operations.
-///
-// => d128::with_context(|ctx| unsafe { *decQuadLogB(&mut self, &self, ctx) })
-fn __dec128_ilogb(x: DEC128, flags: *mut c_uint) -> c_int {
-  // assert_eq!(-308, dec128_ilogb(d128("2.22507E-308"), f!()));
-  // assert_eq!(1, dec128_ilogb(d128("22.200"), f!()));
-
-  // TODO: Implement...
-  return 0;
-}
-
 // TODO: Implement rounding modes and flags for error codes:
 fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
   let split = s.splitn(2, |c| c == 'e' || c == 'E');
@@ -270,9 +247,6 @@ pub fn dec128_from_uint64(x: u64) -> DEC128 {
 /// were represented with infinite range and minimum exponent.
 pub fn bid128_ilogb(x: BID128, flags: &mut u32) -> i32 {
   unsafe { __bid128_ilogb(x, flags) }
-}
-pub fn dec128_ilogb(x: DEC128, flags: &mut u32) -> i32 {
-  __dec128_ilogb(x, flags)
 }
 
 /// Returns `true` if and only if x is zero, subnormal or normal (not infinite or NaN).

@@ -193,19 +193,11 @@ mod tests_000 {
     eq2("+18446744073709551615E+0", dec128_from_uint64(u64::MAX));
   }
 
-  /// TODO: Implement
-  // #[test]
-  // fn test_bid128_ilogb() {
-  //   assert_eq!(-308, bid128_ilogb(d128("2.22507E-308"), f!()));
-  //   assert_eq!(1, bid128_ilogb(d128("22.200"), f!()));
-  // }
-
-  /// TODO: Implement
-  // #[test]
-  // fn test_dec128_ilogb() {
-  //   assert_eq!(-308, dec128_ilogb(dec128("2.22507E-308"), f!()));
-  //   assert_eq!(1, dec128_ilogb(dec128("22.200"), f!()));
-  // }
+  #[test]
+  fn test_bid128_ilogb() {
+    assert_eq!(-308, bid128_ilogb(d128("2.22507E-308"), f!()));
+    assert_eq!(1, bid128_ilogb(d128("22.200"), f!()));
+  }
 
   // Current:
   #[test]
