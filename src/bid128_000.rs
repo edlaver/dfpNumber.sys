@@ -37,7 +37,7 @@ use std::{
 
 use rust_decimal::{
   prelude::{FromPrimitive, ToPrimitive},
-  Decimal as DEC128,
+  Decimal as DEC128, MathematicalOps,
 };
 use rust_decimal_macros::dec as dec128;
 
@@ -95,8 +95,8 @@ extern "C" {
 /// Only these functions are used in FeelNumber:
 // [x] bid128_abs
 // [x] bid128_add
-// [ ] bid128_div
-// bid128_exp
+// [x] bid128_div
+// [ ] bid128_exp
 // [x] bid128_from_int32
 // [x] bid128_from_int64
 // [x] bid128_from_string
@@ -140,6 +140,11 @@ fn __dec128_add(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC1
 
 fn __dec128_div(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
   return x / y;
+}
+
+fn __dec128_exp(x: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  let result = x.exp();
+  return result;
 }
 
 fn __dec128_from_int32(x: c_int) -> DEC128 {
@@ -213,6 +218,9 @@ pub fn dec128_div(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
 /// Returns the value of `e` raised to the `x`th power.
 pub fn bid128_exp(x: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_exp(x, round, flags) }
+}
+pub fn dec128_exp(x: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_exp(x, round, flags)
 }
 
 ///

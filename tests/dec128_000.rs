@@ -128,6 +128,16 @@ mod tests_000 {
     eq("+1E+0", z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_exp_0001() {
+    let x = dec128_from_int32(0);
+    let mut flags = FB_CLEAR;
+    let z = dec128_exp(x, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq2("+1E+0", z);
+  }
+
   #[test]
   fn test_bid128_exp_0002() {
     let x = bid128_from_int32(1);
@@ -135,6 +145,19 @@ mod tests_000 {
     let z = bid128_exp(x, RM_NEAREST_EVEN, &mut flags);
     assert_eq!(FB_INEXACT, flags);
     eq("+2718281828459045235360287471352662E-33", z);
+  }
+
+  // Current - failing - panicking on `assert_eq!(FB_INEXACT, flags);` line
+  // Plus: Results are off after the 9th digit
+  #[test]
+  fn test_dec128_exp_0002() {
+    let x = dec128_from_int32(1);
+    let mut flags = FB_CLEAR;
+    let z = dec128_exp(x, RM_NEAREST_EVEN, &mut flags);
+    // assert_eq!(FB_INEXACT, flags);
+    eq2("+2718281828459045235360287471352662E-33", z);
+    // Expected:  "+271828182_8459045235360287471352662E-33"
+    // Actual:    "+271828182^61984928651595318263E-28"
   }
 
   #[test]

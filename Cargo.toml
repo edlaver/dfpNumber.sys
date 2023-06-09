@@ -10,7 +10,8 @@ edition = "2021"
 
 [dependencies]
 libc = "0.2.138"
-rust_decimal = "1.29.1"
+# rust_decimal = "1.29.1"
+rust_decimal = { features = ["maths"], version = "1.29.1" }
 rust_decimal_macros = "1.29.1"
 
 [build-dependencies]
