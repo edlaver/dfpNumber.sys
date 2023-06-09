@@ -81,6 +81,17 @@ mod tests_000 {
     eq("+7E+0", z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_add_0001() {
+    let x = dec128_from_int32(2);
+    let y = dec128_from_int32(5);
+    let mut flags = FB_CLEAR;
+    let z = dec128_add(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq2("+7E+0", z);
+  }
+
   #[test]
   fn test_bid128_copy() {
     eq("+12345E-4", bid128_copy(d128("1.2345")));

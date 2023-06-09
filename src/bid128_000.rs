@@ -94,7 +94,7 @@ extern "C" {
 /// To reimplement: ///
 /// Only these functions are used in FeelNumber:
 // [x] bid128_abs
-// bid128_add
+// [ ] bid128_add
 // bid128_div
 // bid128_exp
 // [x] bid128_from_int32
@@ -132,6 +132,10 @@ extern "C" {
 
 fn __dec128_abs(x: DEC128) -> DEC128 {
   return x.abs();
+}
+
+fn __dec128_add(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x + y;
 }
 
 fn __dec128_from_int32(x: c_int) -> DEC128 {
@@ -184,6 +188,9 @@ pub fn dec128_abs(x: DEC128) -> DEC128 {
 /// Returns a result of decimal floating-point addition, [Decimal128] + [Decimal128] -> [Decimal128]
 pub fn bid128_add(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_add(x, y, round, flags) }
+}
+pub fn dec128_add(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_add(x, y, round, flags)
 }
 
 /// Copies a decimal floating-point operand x to a destination in the same format, with no change.
