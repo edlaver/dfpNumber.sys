@@ -93,7 +93,7 @@ extern "C" {
 
 /// To reimplement: ///
 /// Only these functions are used in FeelNumber:
-// [ ] bid128_abs
+// [x] bid128_abs
 // bid128_add
 // bid128_div
 // bid128_exp
@@ -129,7 +129,11 @@ extern "C" {
 // bid128_to_uint64_int
 
 /// Reimplemented functions: ///
-/// fn __bid128_from_int32(x: c_int) -> BID128;
+
+fn __dec128_abs(x: DEC128) -> DEC128 {
+  return x.abs();
+}
+
 fn __dec128_from_int32(x: c_int) -> DEC128 {
   // TODO: Don't use unwrap_or_default?
   return DEC128::from_i32(x).unwrap_or_default();
@@ -171,6 +175,10 @@ fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
 /// changing the sign to positive.
 pub fn bid128_abs(x: BID128) -> BID128 {
   unsafe { __bid128_abs(x) }
+}
+// TODO: Add unit tests
+pub fn dec128_abs(x: DEC128) -> DEC128 {
+  dec128_abs(x)
 }
 
 /// Returns a result of decimal floating-point addition, [Decimal128] + [Decimal128] -> [Decimal128]
