@@ -91,6 +91,43 @@ extern "C" {
   fn __bid128_to_string(s: *mut c_char, x: BID128, flags: *mut c_uint);
 }
 
+/// To reimplement: ///
+/// Only these functions are used in FeelNumber:
+// [ ] bid128_abs
+// bid128_add
+// bid128_div
+// bid128_exp
+// [x] bid128_from_int32
+// [x] bid128_from_int64
+// [x] bid128_from_string
+// [x] bid128_from_uint32
+// [x] bid128_from_uint64
+// bid128_inf
+// [-] bid128_is_finite
+// bid128_is_zero
+// bid128_log
+// bid128_mul
+// bid128_negate
+// bid128_pow
+// bid128_quantize
+// bid128_quiet_equal
+// bid128_quiet_greater
+// bid128_quiet_greater_equal
+// bid128_quiet_less
+// bid128_quiet_less_equal
+// bid128_rem
+// bid128_round_integral_negative
+// bid128_round_integral_positive
+// bid128_round_integral_zero
+// bid128_scalbn
+// bid128_sqrt
+// bid128_sub
+// bid128_to_int32_int
+// bid128_to_int64_int
+// bid128_to_string
+// bid128_to_uint32_int
+// bid128_to_uint64_int
+
 /// Reimplemented functions: ///
 /// fn __bid128_from_int32(x: c_int) -> BID128;
 fn __dec128_from_int32(x: c_int) -> DEC128 {
