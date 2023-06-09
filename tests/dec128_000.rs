@@ -108,6 +108,17 @@ mod tests_000 {
     eq("+4E-1", z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_div_0001() {
+    let x = dec128_from_int32(2);
+    let y = dec128_from_int32(5);
+    let mut flags = FB_CLEAR;
+    let z = dec128_div(x, y, RM_NEAREST_EVEN, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    eq2("+4E-1", z);
+  }
+
   #[test]
   fn test_bid128_exp_0001() {
     let x = bid128_from_int32(0);

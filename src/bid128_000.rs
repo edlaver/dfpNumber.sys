@@ -94,8 +94,8 @@ extern "C" {
 /// To reimplement: ///
 /// Only these functions are used in FeelNumber:
 // [x] bid128_abs
-// [ ] bid128_add
-// bid128_div
+// [x] bid128_add
+// [ ] bid128_div
 // bid128_exp
 // [x] bid128_from_int32
 // [x] bid128_from_int64
@@ -136,6 +136,10 @@ fn __dec128_abs(x: DEC128) -> DEC128 {
 
 fn __dec128_add(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
   return x + y;
+}
+
+fn __dec128_div(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x / y;
 }
 
 fn __dec128_from_int32(x: c_int) -> DEC128 {
@@ -201,6 +205,9 @@ pub fn bid128_copy(x: BID128) -> BID128 {
 /// Returns s result of decimal floating-point division, [Decimal128] / [Decimal128] -> [Decimal128]
 pub fn bid128_div(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_div(x, y, round, flags) }
+}
+pub fn dec128_div(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_div(x, y, round, flags)
 }
 
 /// Returns the value of `e` raised to the `x`th power.
@@ -466,9 +473,10 @@ pub fn bid128_to_string(x: BID128, flags: &mut u32) -> String {
   }
 }
 pub fn dec128_to_string(x: DEC128, flags: &mut u32) -> String {
+  let normalized_x = x.normalize();
   let mantissa_sign = if x.is_sign_negative() { "" } else { "+" };
-  let mantissa = x.mantissa();
-  let scale = x.scale();
+  let mantissa = normalized_x.mantissa();
+  let scale = normalized_x.scale();
   let scale_sign = if scale > 0 { '-' } else { '+' };
 
   format!("{}{}E{}{}", mantissa_sign, mantissa, scale_sign, scale)
