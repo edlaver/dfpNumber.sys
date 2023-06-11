@@ -105,12 +105,12 @@ extern "C" {
 // [-] bid128_inf
 // [-] bid128_is_finite
 // [x] bid128_is_zero
-// bid128_log
-// bid128_mul
-// bid128_negate
-// bid128_pow
-// bid128_quantize
-// bid128_quiet_equal
+// [-] bid128_log
+// [-] bid128_mul
+// [-] bid128_negate
+// [x] bid128_pow
+// [-] bid128_quantize
+// [ ] bid128_quiet_equal
 // bid128_quiet_greater
 // bid128_quiet_greater_equal
 // bid128_quiet_less
@@ -187,6 +187,54 @@ fn __dec128_inf() -> Option<DEC128> {
 
 fn __dec128_is_zero(x: DEC128) -> c_int {
   return x.is_zero() as c_int;
+}
+
+fn __dec128_log(x: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x.checked_ln().unwrap_or_default();
+}
+
+fn __dec128_mul(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x * y;
+}
+
+fn __dec128_negate(x: DEC128) -> DEC128 {
+  // let set_negative = !x.is_sign_negative();
+  // let mut copy = x.clone();
+  // copy.set_sign_negative(set_negative);
+  // return copy;
+  return -x;
+}
+
+fn __dec128_pow(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x.powd(y);
+}
+
+/// Returns the number which is equal in value (except for any rounding) and sign
+/// to the first (left-hand) operand and which has an exponent set to be equal
+/// to the exponent of the second (right-hand) operand.
+fn __dec128_quantize(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  // E.g.
+  // let x = d128("2.3456");
+  // let y = d128("0.001");
+  // let z = bid128_quantize(x, y, RM_NEAREST_EVEN, &mut flags);
+  // eq("+2346E-3", z);
+
+  // Initial implementation: //
+  // // Round up the penultimate decimal place value:
+  // let dp = x.scale() - 1;
+  // let rounded = x.round_dp(dp);
+
+  // // Then create a number using the scale of y:
+  // let mantissa = rounded.mantissa();
+  // let scale = y.scale();
+  // let scale_sign = if scale > 0 { '-' } else { '+' };
+  // let q_str = format!("{}E{}{}", mantissa, scale_sign, scale);
+
+  // return __dec128_from_string(&q_str, round, flags);
+
+  // Alternative implementation: //
+  let dp = y.scale();
+  return x.round_dp(dp);
 }
 
 // TODO: Implement rounding modes and flags for error codes:
@@ -337,6 +385,9 @@ pub fn dec128_is_zero(x: DEC128) -> bool {
 pub fn bid128_log(x: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_log(x, round, flags) }
 }
+pub fn dec128_log(x: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_log(x, round, flags)
+}
 
 /// Returns the canonicalized floating-point number y if x < y,
 /// x if y < x, the canonicalized floating-point number if one operand
@@ -358,15 +409,24 @@ pub fn bid128_minnum(x: BID128, y: BID128, flags: &mut u32) -> BID128 {
 pub fn bid128_negate(x: BID128) -> BID128 {
   unsafe { __bid128_negate(x) }
 }
+pub fn dec128_negate(x: DEC128) -> DEC128 {
+  __dec128_negate(x)
+}
 
 /// Returns s result of decimal floating-point multiplication, [Decimal128] * [Decimal128] -> [Decimal128]
 pub fn bid128_mul(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_mul(x, y, round, flags) }
 }
+pub fn dec128_mul(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  unsafe { __dec128_mul(x, y, round, flags) }
+}
 
 /// Returns decimal floating-point power.
 pub fn bid128_pow(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_pow(x, y, round, flags) }
+}
+pub fn dec128_pow(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_pow(x, y, round, flags)
 }
 
 /// Returns the quantum of a finite argument as a signed integer value.
@@ -385,6 +445,9 @@ pub fn bid128_quantum(x: BID128) -> BID128 {
 /// to the exponent of the second (right-hand) operand.
 pub fn bid128_quantize(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_quantize(x, y, round, flags) }
+}
+pub fn dec128_quantize(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_quantize(x, y, round, flags)
 }
 
 /// Compares 128-bit decimal floating-point numbers for specified relation,
@@ -508,7 +571,16 @@ pub fn bid128_to_string(x: BID128, flags: &mut u32) -> String {
 }
 pub fn dec128_to_string(x: DEC128, flags: &mut u32) -> String {
   let normalized_x = x.normalize();
-  let mantissa_sign = if x.is_sign_negative() { "" } else { "+" };
+  // let mantissa_sign = if x.is_sign_negative() { "" } else { "+" };
+  let mantissa_sign = if x.is_sign_negative() {
+    if x.is_zero() {
+      "+" // Force sign of zero to be positive
+    } else {
+      ""
+    }
+  } else {
+    "+"
+  };
   let mantissa = normalized_x.mantissa();
   let scale = normalized_x.scale();
   let scale_sign = if scale > 0 { '-' } else { '+' };
