@@ -275,19 +275,27 @@ mod tests_000 {
     assert!(!bid128_is_finite(d128("NaN")));
   }
 
-  // Current:
-  /// TODO: Implement
-  // #[test]
-  // fn test_dec128_is_finite() {
-  //   assert!(dec128_is_finite(dec128_from_int32(-1)));
-  //   assert!(!dec128_is_finite(dec128("NaN")));
-  // }
+  // Partial:
+  #[test]
+  fn test_dec128_is_finite() {
+    assert!(dec128_is_finite(dec128_from_int32(-1)));
+    // TODO: Support special values
+    // assert!(!dec128_is_finite(dec128("NaN")));
+  }
 
   #[test]
   fn test_bid128_is_zero() {
     assert!(!bid128_is_zero(bid128_from_int32(-1)));
     assert!(bid128_is_zero(bid128_from_int32(0)));
     assert!(!bid128_is_zero(bid128_from_int32(1)));
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_is_zero() {
+    assert!(!dec128_is_zero(dec128_from_int32(-1)));
+    assert!(dec128_is_zero(dec128_from_int32(0)));
+    assert!(!dec128_is_zero(dec128_from_int32(1)));
   }
 
   #[test]
@@ -755,4 +763,12 @@ mod tests_000 {
     assert!(bid128_is_infinite(x));
     assert!(!bid128_is_finite(x));
   }
+
+  // Pending:
+  // #[test]
+  // fn test_dec128_infinite() {
+  //   let x = dec128_inf();
+  //   assert!(dec128_is_infinite(x));
+  //   assert!(!dec128_is_finite(x));
+  // }
 }

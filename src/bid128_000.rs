@@ -102,9 +102,9 @@ extern "C" {
 // [x] bid128_from_string
 // [x] bid128_from_uint32
 // [x] bid128_from_uint64
-// [ ] bid128_inf
+// [-] bid128_inf
 // [-] bid128_is_finite
-// bid128_is_zero
+// [x] bid128_is_zero
 // bid128_log
 // bid128_mul
 // bid128_negate
@@ -169,11 +169,28 @@ fn __dec128_from_uint64(x: c_ulonglong) -> DEC128 {
 }
 
 // TODO: Implement this properly.
+// Note: FEEL does not support -INF, +INF, or NaN. FEEL uses null to represent invalid numbers.
 fn __dec128_is_finite(x: DEC128) -> c_int {
-  return 1;
+  // return x.is_finite() as c_int; // No is_finite() method on DEC128, so use this for now?
+  // return x.to_f64().unwrap().is_finite() as c_int; ?
+
+  // Will always be true, as DEC128 is always finite, otherwise it wouldn't have been created as a DEC12*, e.g. Option::None?
+  return true as c_int;
+}
+
+// TODO: Decide if worth implementing or not
+// Note: FEEL does not support -INF, +INF, or NaN. FEEL uses null to represent invalid numbers.
+fn __dec128_inf() -> Option<DEC128> {
+  // return DEC128::INFINITY; // No INFINITY constant implemented on DEC128.
+  return Option::None;
+}
+
+fn __dec128_is_zero(x: DEC128) -> c_int {
+  return x.is_zero() as c_int;
 }
 
 // TODO: Implement rounding modes and flags for error codes:
+// TODO: Handle "NaN" and "-INF, +INF" strings. Return a null value instead of a DEC128. e.g. Option::None.
 fn __dec128_from_string(s: &str, round: c_uint, flags: *mut c_uint) -> DEC128 {
   let split = s.splitn(2, |c| c == 'e' || c == 'E');
   if split.count() > 1 {
@@ -294,6 +311,9 @@ pub fn dec128_is_finite(x: DEC128) -> bool {
 pub fn bid128_inf() -> BID128 {
   unsafe { __bid128_inf() }
 }
+pub fn dec128_inf() -> Option<DEC128> {
+  __dec128_inf()
+}
 
 /// Returns `true` if x is infinite.
 pub fn bid128_is_infinite(x: BID128) -> bool {
@@ -308,6 +328,9 @@ pub fn bid128_is_signed(x: BID128) -> bool {
 /// Returns `true` if and only if `x` is `+0` or `-0`.
 pub fn bid128_is_zero(x: BID128) -> bool {
   unsafe { __bid128_isZero(x) != 0 }
+}
+pub fn dec128_is_zero(x: DEC128) -> bool {
+  __dec128_is_zero(x) != 0
 }
 
 /// Returns natural logarithm of `x`.
