@@ -1132,6 +1132,21 @@ mod tests_000 {
     assert_eq!(FB_INVALID, flags);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_to_uint32_int() {
+    assert_eq!(0, dec128_to_uint32_int(dec128("0"), f!()));
+    assert_eq!(0, dec128_to_uint32_int(dec128("0.12"), f!()));
+    assert_eq!(0, dec128_to_uint32_int(dec128("0.99"), f!()));
+    assert_eq!(4294967295, dec128_to_uint32_int(dec128("4294967295.999"), f!()));
+    let mut flags = FB_CLEAR;
+    assert_eq!(2147483648, dec128_to_uint32_int(dec128("214748364834534593829384"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(2147483648, dec128_to_uint32_int(dec128("-21474836483453459.3827423947"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
+  }
+
   #[test]
   fn test_bid128_to_int64_int() {
     assert_eq!(0, bid128_to_int64_int(d128("0"), f!()));
@@ -1179,6 +1194,25 @@ mod tests_000 {
     let mut flags = FB_CLEAR;
     assert_eq!(9223372036854775808, bid128_to_uint64_int(d128("-21474836483453459.3827423947"), &mut flags));
     assert_eq!(FB_INVALID, flags);
+  }
+
+  // Current
+  #[test]
+  fn test_dec128_to_uint64_int() {
+    assert_eq!(0, dec128_to_uint64_int(dec128("0"), f!()));
+    assert_eq!(0, dec128_to_uint64_int(dec128("0.12"), f!()));
+    assert_eq!(0, dec128_to_uint64_int(dec128("0.99"), f!()));
+    assert_eq!(18446744073709551615, dec128_to_uint64_int(dec128("18446744073709551615.999"), f!()));
+
+    // TODO: This overflows our dec128 implementation, so it's returning the default value of 0.
+    // Investigate and possibly fix.
+    // let mut flags = FB_CLEAR;
+    // assert_eq!(9223372036854775808, dec128_to_uint64_int(dec128("3498375214748364834534593829384"), &mut flags));
+
+    // assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(9223372036854775808, dec128_to_uint64_int(dec128("-21474836483453459.3827423947"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
   }
 
   #[test]

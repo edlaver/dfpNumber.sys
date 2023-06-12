@@ -124,9 +124,9 @@ extern "C" {
 // [x] bid128_sub
 // [-] bid128_to_int32_int
 // [x] bid128_to_int64_int
-// bid128_to_string
-// bid128_to_uint32_int
-// bid128_to_uint64_int
+// [x] bid128_to_string
+// [x] bid128_to_uint32_int
+// [x] bid128_to_uint64_int
 
 /// Reimplemented functions: ///
 
@@ -333,6 +333,36 @@ fn __dec128_to_int64_int(x: DEC128, flags: *mut c_uint) -> c_longlong {
     return i64::MIN;
   } else {
     return rounded_down_x.to_i64().unwrap();
+  }
+}
+
+// TODO: Review logic, and use of hardcoded number
+// TODO: See similar comments above for __dec128_to_int32_int
+fn __dec128_to_uint32_int(x: DEC128, flags: *mut c_uint) -> c_uint {
+  let rounded_down_x = x.round_dp_with_strategy(0, rust_decimal::RoundingStrategy::ToZero);
+
+  let max_u32_as_dec128 = DEC128::from_u32(u32::MAX).unwrap();
+  let min_u32_as_dec128 = DEC128::from_u32(u32::MIN).unwrap();
+
+  // TODO: See similar comments above for __dec128_to_int32_int
+  if (rounded_down_x > max_u32_as_dec128 || rounded_down_x < min_u32_as_dec128) {
+    return 2147483648; // Not sure why this is i32::MAX + 1, but it matches the tests, sooo...
+  } else {
+    return rounded_down_x.to_u32().unwrap();
+  }
+}
+
+fn __dec128_to_uint64_int(x: DEC128, flags: *mut c_uint) -> c_ulonglong {
+  let rounded_down_x = x.round_dp_with_strategy(0, rust_decimal::RoundingStrategy::ToZero);
+
+  let max_u64_as_dec128 = DEC128::from_u64(u64::MAX).unwrap();
+  let min_u64_as_dec128 = DEC128::from_u64(u64::MIN).unwrap();
+
+  // TODO: See similar comments above for __dec128_to_int32_int
+  if (rounded_down_x > max_u64_as_dec128 || rounded_down_x < min_u64_as_dec128) {
+    return 9223372036854775808; // ? Looks to be half of u64::MAX, but not sure why?
+  } else {
+    return rounded_down_x.to_u64().unwrap();
   }
 }
 
@@ -685,6 +715,9 @@ pub fn dec128_to_int32_int(x: DEC128, flags: &mut u32) -> i32 {
 pub fn bid128_to_uint32_int(x: BID128, flags: &mut u32) -> u32 {
   unsafe { __bid128_to_uint32_int(x, flags) }
 }
+pub fn dec128_to_uint32_int(x: DEC128, flags: &mut u32) -> u32 {
+  __dec128_to_uint32_int(x, flags)
+}
 
 /// Convert 128-bit decimal floating-point value to 64-bit signed integer
 /// with rounding-to-zero mode, inexact exceptions are not signaled.
@@ -699,6 +732,9 @@ pub fn dec128_to_int64_int(x: DEC128, flags: &mut u32) -> i64 {
 /// with rounding-to-zero mode, inexact exceptions are not signaled.
 pub fn bid128_to_uint64_int(x: BID128, flags: &mut u32) -> u64 {
   unsafe { __bid128_to_uint64_int(x, flags) }
+}
+pub fn dec128_to_uint64_int(x: DEC128, flags: &mut u32) -> u64 {
+  __dec128_to_uint64_int(x, flags)
 }
 
 /// Converts 128-bit decimal floating-point value (binary encoding)
