@@ -26,12 +26,12 @@
 
 extern crate libc;
 
-mod bid128;
-#[cfg(all(not(feature = "call-by-reference"), not(feature = "global-rounding"), not(feature = "global-exception-flags")))]
-mod bid128_000;
 mod common;
-
-pub use bid128::*;
+mod dec128;
 #[cfg(all(not(feature = "call-by-reference"), not(feature = "global-rounding"), not(feature = "global-exception-flags")))]
-pub use bid128_000::*;
+mod dec128_000;
+
 pub use common::*;
+pub use dec128::*;
+#[cfg(all(not(feature = "call-by-reference"), not(feature = "global-rounding"), not(feature = "global-exception-flags")))]
+pub use dec128_000::*;

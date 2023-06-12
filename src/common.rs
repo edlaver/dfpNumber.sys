@@ -24,16 +24,11 @@
 
 //! Common definitions.
 
-/// 128-bit decimal.
-#[repr(C, align(16))]
+/// 128-bit decimal using rust_decimal
 #[derive(Debug, Copy, Clone)]
-pub struct BID128 {
+pub struct DEC128 {
   pub w: [u64; 2],
 }
-
-// pub struct DEC128 {
-//   pub w: [u64; 2],
-// }
 
 /// Exception flag `Invalid` as [u32] value.
 pub const FB_INVALID: u32 = FlagBits::Invalid as u32;
