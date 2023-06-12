@@ -586,12 +586,34 @@ mod tests_000 {
     assert!(z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_quiet_equal_0001() {
+    let x = dec128("2.3456");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
   #[test]
   fn test_bid128_quiet_equal_0002() {
     let x = d128("2.3456");
     let y = d128("2.34561");
     let mut flags = FB_CLEAR;
     let z = bid128_quiet_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_quiet_equal_0002() {
+    let x = dec128("2.3456");
+    let y = dec128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_equal(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(!z);
   }
@@ -606,12 +628,34 @@ mod tests_000 {
     assert!(!z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_quiet_greater_0001() {
+    let x = dec128("2.3456");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_greater(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
   #[test]
   fn test_bid128_quiet_greater_0002() {
     let x = d128("2.34561");
     let y = d128("2.3456");
     let mut flags = FB_CLEAR;
     let z = bid128_quiet_greater(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_quiet_greater_0002() {
+    let x = dec128("2.34561");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_greater(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(z);
   }
@@ -626,12 +670,34 @@ mod tests_000 {
     assert!(z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_quiet_greater_equal_0001() {
+    let x = dec128("2.3456");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_greater_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
   #[test]
   fn test_bid128_quiet_greater_equal_0002() {
     let x = d128("2.34561");
     let y = d128("2.3456");
     let mut flags = FB_CLEAR;
     let z = bid128_quiet_greater_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_quiet_greater_equal_0002() {
+    let x = dec128("2.34561");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_greater_equal(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(z);
   }
@@ -646,12 +712,34 @@ mod tests_000 {
     assert!(!z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_quiet_greater_equal_0003() {
+    let x = dec128("2.3456");
+    let y = dec128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_greater_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
   #[test]
   fn test_bid128_quiet_less_0001() {
     let x = d128("2.3456");
     let y = d128("2.3456");
     let mut flags = FB_CLEAR;
     let z = bid128_quiet_less(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_quiet_less_0001() {
+    let x = dec128("2.3456");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_less(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(!z);
   }
@@ -666,12 +754,34 @@ mod tests_000 {
     assert!(z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_quiet_less_0002() {
+    let x = dec128("2.3456");
+    let y = dec128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_less(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
   #[test]
   fn test_bid128_quiet_less_equal_0001() {
     let x = d128("2.3456");
     let y = d128("2.3456");
     let mut flags = FB_CLEAR;
     let z = bid128_quiet_less_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_quiet_less_equal_0001() {
+    let x = dec128("2.3456");
+    let y = dec128("2.3456");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_less_equal(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(z);
   }
@@ -686,6 +796,17 @@ mod tests_000 {
     assert!(z);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_quiet_less_equal_0002() {
+    let x = dec128("2.3456");
+    let y = dec128("2.34561");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_less_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(z);
+  }
+
   #[test]
   fn test_bid128_quiet_less_equal_0003() {
     let x = d128("2.34561");
@@ -694,6 +815,57 @@ mod tests_000 {
     let z = bid128_quiet_less_equal(x, y, &mut flags);
     assert_eq!(FB_CLEAR, flags);
     assert!(!z);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_quiet_less_equal_0003() {
+    let x = dec128("2.34561");
+    let y = dec128("2.34560");
+    let mut flags = FB_CLEAR;
+    let z = dec128_quiet_less_equal(x, y, &mut flags);
+    assert_eq!(FB_CLEAR, flags);
+    assert!(!z);
+  }
+
+  #[test]
+  fn test_dec128_rem_0001() {
+    let x = dec128("13");
+    let y = dec128("5");
+    let mut flags = FB_CLEAR;
+    let z = dec128_rem(x, y, &mut flags);
+    // assert_eq!(FB_INEXACT, flags);
+    eq2("+3E+0", z);
+  }
+
+  #[test]
+  fn test_dec128_rem_0002() {
+    let x = dec128("-13");
+    let y = dec128("5");
+    let mut flags = FB_CLEAR;
+    let z = dec128_rem(x, y, &mut flags);
+    // assert_eq!(FB_INEXACT, flags);
+    eq2("-3E+0", z);
+  }
+
+  #[test]
+  fn test_dec128_rem_0003() {
+    let x = dec128("4");
+    let y = dec128("2");
+    let mut flags = FB_CLEAR;
+    let z = dec128_rem(x, y, &mut flags);
+    // assert_eq!(FB_INEXACT, flags);
+    eq2("+0E+0", z);
+  }
+
+  #[test]
+  fn test_dec128_rem_0004() {
+    let x = dec128("-4");
+    let y = dec128("2");
+    let mut flags = FB_CLEAR;
+    let z = dec128_rem(x, y, &mut flags);
+    // assert_eq!(FB_INEXACT, flags);
+    eq2("+0E+0", z);
   }
 
   #[test]
@@ -746,6 +918,17 @@ mod tests_000 {
     eq("+2E+0", bid128_round_integral_positive(d128("1.75"), f!()));
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_round_integral_positive() {
+    eq2("-1E+0", dec128_round_integral_positive(dec128("-1.75"), f!()));
+    eq2("-1E+0", dec128_round_integral_positive(dec128("-1.5"), f!()));
+    eq2("-1E+0", dec128_round_integral_positive(dec128("-1.25"), f!()));
+    eq2("+2E+0", dec128_round_integral_positive(dec128("1.25"), f!()));
+    eq2("+2E+0", dec128_round_integral_positive(dec128("1.5"), f!()));
+    eq2("+2E+0", dec128_round_integral_positive(dec128("1.75"), f!()));
+  }
+
   #[test]
   fn test_bid128_round_integral_exact_upward() {
     eq("-1E+0", bid128_round_integral_exact(d128("-1.75"), RM_UPWARD, f!()));
@@ -764,6 +947,17 @@ mod tests_000 {
     eq("+1E+0", bid128_round_integral_negative(d128("1.25"), f!()));
     eq("+1E+0", bid128_round_integral_negative(d128("1.5"), f!()));
     eq("+1E+0", bid128_round_integral_negative(d128("1.75"), f!()));
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_round_integral_negative() {
+    eq2("-2E+0", dec128_round_integral_negative(dec128("-1.75"), f!()));
+    eq2("-2E+0", dec128_round_integral_negative(dec128("-1.5"), f!()));
+    eq2("-2E+0", dec128_round_integral_negative(dec128("-1.25"), f!()));
+    eq2("+1E+0", dec128_round_integral_negative(dec128("1.25"), f!()));
+    eq2("+1E+0", dec128_round_integral_negative(dec128("1.5"), f!()));
+    eq2("+1E+0", dec128_round_integral_negative(dec128("1.75"), f!()));
   }
 
   #[test]
@@ -786,6 +980,17 @@ mod tests_000 {
     eq("+1E+0", bid128_round_integral_zero(d128("1.75"), f!()));
   }
 
+  // Current
+  #[test]
+  fn test_dec128_round_integral_zero() {
+    eq2("-1E+0", dec128_round_integral_zero(dec128("-1.75"), f!()));
+    eq2("-1E+0", dec128_round_integral_zero(dec128("-1.5"), f!()));
+    eq2("-1E+0", dec128_round_integral_zero(dec128("-1.25"), f!()));
+    eq2("+1E+0", dec128_round_integral_zero(dec128("1.25"), f!()));
+    eq2("+1E+0", dec128_round_integral_zero(dec128("1.5"), f!()));
+    eq2("+1E+0", dec128_round_integral_zero(dec128("1.75"), f!()));
+  }
+
   #[test]
   fn test_bid128_round_integral_toward_zero() {
     eq("-1E+0", bid128_round_integral_exact(d128("-1.75"), RM_TOWARD_ZERO, f!()));
@@ -802,9 +1007,41 @@ mod tests_000 {
     eq("+2356789100E-9", x);
   }
 
+  // Passing
+  #[test]
+  fn test_dec128_scalbn_0001() {
+    let x = dec128_scalbn(dec128_from_int64(2356789100), -9);
+    // eq2("+2356789100E-9", x);  // Original has trailing zeros which are removed
+    eq2("+23567891E-7", x);
+  }
+
+  #[test]
+  fn test_bid128_scalbn_0002() {
+    let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
+    let y = bid128_scalbn(x, 2);
+    eq("+2356789100E-7", y);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_scalbn_0002() {
+    let x = dec128_scalbn(dec128_from_int64(2356789100), -9);
+    let y = dec128_scalbn(x, 2);
+    // eq2("+2356789100E-7", y); // Original has trailing zeros which are removed
+    eq2("+23567891E-5", y);
+  }
+
   #[test]
   fn test_bid128_sqrt_0001() {
     eq("+1414213562373095048801688724209698E-33", bid128_sqrt(d128("2"), RM_NEAREST_EVEN, f!()));
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_sqrt_0001() {
+    // eq2("+14142135623730950488016887242_09698E-33", dec128_sqrt(dec128("2"), RM_NEAREST_EVEN, f!()));
+    //     "+14142135623730950488016887242^E-28"
+    eq2("+14142135623730950488016887242E-28", dec128_sqrt(dec128("2"), RM_NEAREST_EVEN, f!()));
   }
 
   #[test]
@@ -813,6 +1050,14 @@ mod tests_000 {
     let y = bid128_sqrt(x, RM_NEAREST_EVEN, f!());
     assert!(!bid128_is_finite(y));
   }
+
+  // Pending - no dec128_inf support currently
+  // #[test]
+  // fn test_dec128_sqrt_0002() {
+  //   let x = dec128_inf();
+  //   let y = dec128_sqrt(x, RM_NEAREST_EVEN, f!());
+  //   assert!(!dec128_is_finite(y));
+  // }
 
   #[test]
   fn test_bid128_sub_0001() {
@@ -824,11 +1069,15 @@ mod tests_000 {
     eq("-3E+0", z);
   }
 
+  // Passing
   #[test]
-  fn test_bid128_scalbn_0002() {
-    let x = bid128_scalbn(bid128_from_int64(2356789100), -9);
-    let y = bid128_scalbn(x, 2);
-    eq("+2356789100E-7", y);
+  fn test_dec128_sub_0001() {
+    let x = dec128_from_int32(2);
+    let y = dec128_from_int32(5);
+    let mut flags = FB_CLEAR;
+    let z = dec128_sub(x, y, RM_NEAREST_EVEN, &mut flags);
+    // assert_eq!(FB_CLEAR, flags);
+    eq2("-3E+0", z);
   }
 
   #[test]
@@ -846,6 +1095,27 @@ mod tests_000 {
     let mut flags = FB_CLEAR;
     assert_eq!(-2147483648, bid128_to_int32_int(d128("-21474836483453459.3827423947"), &mut flags));
     assert_eq!(FB_INVALID, flags);
+  }
+
+  // Passing
+  #[test]
+  fn test_dec128_to_int32_int() {
+    assert_eq!(0, dec128_to_int32_int(dec128("0"), f!()));
+    assert_eq!(0, dec128_to_int32_int(dec128("0.12"), f!()));
+    assert_eq!(0, dec128_to_int32_int(dec128("0.99"), f!()));
+    assert_eq!(0, dec128_to_int32_int(dec128("-0.12"), f!()));
+    assert_eq!(0, dec128_to_int32_int(dec128("-0.99"), f!()));
+    assert_eq!(2147483647, dec128_to_int32_int(dec128("2147483647.999"), f!()));
+    assert_eq!(-2147483648, dec128_to_int32_int(dec128("-2147483648.999"), f!()));
+    let mut flags = FB_CLEAR;
+    // TODO: Not sure why the positive value is being rounded to the value of i32::MIN?
+    // -2147483648
+    // Presume some sort of overflow arithmetic is happening?
+    assert_eq!(-2147483648, dec128_to_int32_int(dec128("21474836483453459382.7423947"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(-2147483648, dec128_to_int32_int(dec128("-21474836483453459.3827423947"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
   }
 
   #[test]
@@ -877,6 +1147,24 @@ mod tests_000 {
     let mut flags = FB_CLEAR;
     assert_eq!(-9223372036854775808, bid128_to_int64_int(d128("-9214748364834534599487453534.3827"), &mut flags));
     assert_eq!(FB_INVALID, flags);
+  }
+
+  // Current
+  #[test]
+  fn test_dec128_to_int64_int() {
+    assert_eq!(0, dec128_to_int64_int(dec128("0"), f!()));
+    assert_eq!(0, dec128_to_int64_int(dec128("0.12"), f!()));
+    assert_eq!(0, dec128_to_int64_int(dec128("0.99"), f!()));
+    assert_eq!(0, dec128_to_int64_int(dec128("-0.12"), f!()));
+    assert_eq!(0, dec128_to_int64_int(dec128("-0.99"), f!()));
+    assert_eq!(9223372036854775807, dec128_to_int64_int(dec128("9223372036854775807.999"), f!()));
+    assert_eq!(-9223372036854775808, dec128_to_int64_int(dec128("-9223372036854775808.999"), f!()));
+    let mut flags = FB_CLEAR;
+    assert_eq!(-9223372036854775808, dec128_to_int64_int(dec128("921474836483453459382349857.74239"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
+    let mut flags = FB_CLEAR;
+    assert_eq!(-9223372036854775808, dec128_to_int64_int(dec128("-9214748364834534599487453534.3827"), &mut flags));
+    // assert_eq!(FB_INVALID, flags);
   }
 
   #[test]

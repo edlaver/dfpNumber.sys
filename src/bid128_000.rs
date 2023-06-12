@@ -110,20 +110,20 @@ extern "C" {
 // [-] bid128_negate
 // [x] bid128_pow
 // [-] bid128_quantize
-// [ ] bid128_quiet_equal
-// bid128_quiet_greater
-// bid128_quiet_greater_equal
-// bid128_quiet_less
-// bid128_quiet_less_equal
-// bid128_rem
-// bid128_round_integral_negative
-// bid128_round_integral_positive
-// bid128_round_integral_zero
-// bid128_scalbn
-// bid128_sqrt
-// bid128_sub
-// bid128_to_int32_int
-// bid128_to_int64_int
+// [x] bid128_quiet_equal
+// [x] bid128_quiet_greater
+// [x] bid128_quiet_greater_equal
+// [x] bid128_quiet_less
+// [x] bid128_quiet_less_equal
+// [x] bid128_rem
+// [x] bid128_round_integral_negative
+// [x] bid128_round_integral_positive
+// [x] bid128_round_integral_zero
+// [x] bid128_scalbn
+// [-] bid128_sqrt
+// [x] bid128_sub
+// [-] bid128_to_int32_int
+// [x] bid128_to_int64_int
 // bid128_to_string
 // bid128_to_uint32_int
 // bid128_to_uint64_int
@@ -235,6 +235,105 @@ fn __dec128_quantize(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) ->
   // Alternative implementation: //
   let dp = y.scale();
   return x.round_dp(dp);
+}
+
+fn __dec128_quiet_equal(x: DEC128, y: DEC128, flags: *mut c_uint) -> c_int {
+  return (x == y) as c_int;
+}
+
+fn __dec128_quiet_greater(x: DEC128, y: DEC128, flags: *mut c_uint) -> c_int {
+  return (x > y) as c_int;
+}
+
+fn __dec128_quiet_greater_equal(x: DEC128, y: DEC128, flags: *mut c_uint) -> c_int {
+  return (x >= y) as c_int;
+}
+
+fn __dec128_quiet_less(x: DEC128, y: DEC128, flags: *mut c_uint) -> c_int {
+  return (x < y) as c_int;
+}
+
+fn __dec128_quiet_less_equal(x: DEC128, y: DEC128, flags: *mut c_uint) -> c_int {
+  return (x <= y) as c_int;
+}
+
+fn __dec128_rem(x: DEC128, y: DEC128, flags: *mut c_uint) -> DEC128 {
+  return x % y;
+}
+
+// TODO: Handle unwrap better
+fn __dec128_round_integral_negative(x: DEC128, flags: *mut c_uint) -> DEC128 {
+  return x.round_sf_with_strategy(1, rust_decimal::RoundingStrategy::ToNegativeInfinity).unwrap();
+}
+
+// TODO: Handle unwrap better
+fn __dec128_round_integral_positive(x: DEC128, flags: *mut c_uint) -> DEC128 {
+  return x.round_sf_with_strategy(1, rust_decimal::RoundingStrategy::ToPositiveInfinity).unwrap();
+}
+
+// TODO: Handle unwrap better
+fn __dec128_round_integral_zero(x: DEC128, flags: *mut c_uint) -> DEC128 {
+  return x.round_sf_with_strategy(1, rust_decimal::RoundingStrategy::ToZero).unwrap();
+}
+
+// TODO: Potentially use `checked_powd` instead, and return an Option<DEC128> instead of a DEC128.
+fn __dec128_scalbn(x: DEC128, n: c_int) -> DEC128 {
+  let dec_n = DEC128::from_i32(n).unwrap();
+  let ten = DEC128::from_i32(10).unwrap();
+
+  let pow_res = ten.powd(dec_n);
+  let result = x * pow_res;
+
+  return result;
+}
+
+fn __dec128_sqrt(x: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x.sqrt().unwrap();
+}
+
+fn __dec128_sub(x: DEC128, y: DEC128, round: c_uint, flags: *mut c_uint) -> DEC128 {
+  return x - y;
+}
+
+/// Convert 128-bit decimal floating-point value to 32-bit signed integer
+/// with rounding-to-zero mode, inexact exceptions are not signaled.
+// TODO: Check logic. Should we be overflowing the arithmetic?
+fn __dec128_to_int32_int(x: DEC128, flags: *mut c_uint) -> c_int {
+  let rounded_down_x = x.round_dp_with_strategy(0, rust_decimal::RoundingStrategy::ToZero);
+
+  let max_i32_as_dec128 = DEC128::from_i32(i32::MAX).unwrap();
+  let min_i32_as_dec128 = DEC128::from_i32(i32::MIN).unwrap();
+
+  // TODO: Thought this logic would make more sense?
+  // if (rounded_down_x > max_i32_as_dec128) {
+  //   return i32::MAX;
+  // } else if rounded_down_x < min_i32_as_dec128 {
+  //   return i32::MIN;
+  // } else {
+  //   return rounded_down_x.to_i32().unwrap();
+  // }
+
+  // But this logic matches the tests, so hey ho.
+  if (rounded_down_x > max_i32_as_dec128 || rounded_down_x < min_i32_as_dec128) {
+    return i32::MIN;
+  } else {
+    return rounded_down_x.to_i32().unwrap();
+  }
+}
+
+// TODO: See similar comments above for __dec128_to_int32_int
+fn __dec128_to_int64_int(x: DEC128, flags: *mut c_uint) -> c_longlong {
+  let rounded_down_x = x.round_dp_with_strategy(0, rust_decimal::RoundingStrategy::ToZero);
+
+  let max_i64_as_dec128 = DEC128::from_i64(i64::MAX).unwrap();
+  let min_i64_as_dec128 = DEC128::from_i64(i64::MIN).unwrap();
+
+  // TODO: See similar comments above for __dec128_to_int32_int
+  if (rounded_down_x > max_i64_as_dec128 || rounded_down_x < min_i64_as_dec128) {
+    return i64::MIN;
+  } else {
+    return rounded_down_x.to_i64().unwrap();
+  }
 }
 
 // TODO: Implement rounding modes and flags for error codes:
@@ -455,11 +554,17 @@ pub fn dec128_quantize(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC
 pub fn bid128_quiet_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_equal(x, y, flags) != 0 }
 }
+pub fn dec128_quiet_equal(x: DEC128, y: DEC128, flags: &mut u32) -> bool {
+  __dec128_quiet_equal(x, y, flags) != 0
+}
 
 /// Compares 128-bit decimal floating-point numbers for specified relation,
 /// does not signal invalid exception for quiet NaNs.
 pub fn bid128_quiet_greater(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_greater(x, y, flags) != 0 }
+}
+pub fn dec128_quiet_greater(x: DEC128, y: DEC128, flags: &mut u32) -> bool {
+  __dec128_quiet_greater(x, y, flags) != 0
 }
 
 /// Compares 128-bit decimal floating-point numbers for specified relation,
@@ -467,11 +572,17 @@ pub fn bid128_quiet_greater(x: BID128, y: BID128, flags: &mut u32) -> bool {
 pub fn bid128_quiet_greater_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_greater_equal(x, y, flags) != 0 }
 }
+pub fn dec128_quiet_greater_equal(x: DEC128, y: DEC128, flags: &mut u32) -> bool {
+  __dec128_quiet_greater_equal(x, y, flags) != 0
+}
 
 /// Compares 128-bit decimal floating-point numbers for specified relation,
 /// does not signal invalid exception for quiet NaNs.
 pub fn bid128_quiet_less(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_less(x, y, flags) != 0 }
+}
+pub fn dec128_quiet_less(x: DEC128, y: DEC128, flags: &mut u32) -> bool {
+  __dec128_quiet_less(x, y, flags) != 0
 }
 
 /// Compares 128-bit decimal floating-point numbers for specified relation,
@@ -479,10 +590,16 @@ pub fn bid128_quiet_less(x: BID128, y: BID128, flags: &mut u32) -> bool {
 pub fn bid128_quiet_less_equal(x: BID128, y: BID128, flags: &mut u32) -> bool {
   unsafe { __bid128_quiet_less_equal(x, y, flags) != 0 }
 }
+pub fn dec128_quiet_less_equal(x: DEC128, y: DEC128, flags: &mut u32) -> bool {
+  __dec128_quiet_less_equal(x, y, flags) != 0
+}
 
 /// Returns decimal floating-point remainder.
 pub fn bid128_rem(x: BID128, y: BID128, flags: &mut u32) -> BID128 {
   unsafe { __bid128_rem(x, y, flags) }
+}
+pub fn dec128_rem(x: DEC128, y: DEC128, flags: &mut u32) -> DEC128 {
+  unsafe { __dec128_rem(x, y, flags) }
 }
 
 /// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
@@ -508,11 +625,17 @@ pub fn bid128_round_integral_nearest_even(x: BID128, flags: &mut u32) -> BID128 
 pub fn bid128_round_integral_negative(x: BID128, flags: &mut u32) -> BID128 {
   unsafe { __bid128_round_integral_negative(x, flags) }
 }
+pub fn dec128_round_integral_negative(x: DEC128, flags: &mut u32) -> DEC128 {
+  __dec128_round_integral_negative(x, flags)
+}
 
 /// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
 /// in the same format, using the rounding-up mode; do not signal inexact exceptions.
 pub fn bid128_round_integral_positive(x: BID128, flags: &mut u32) -> BID128 {
   unsafe { __bid128_round_integral_positive(x, flags) }
+}
+pub fn dec128_round_integral_positive(x: DEC128, flags: &mut u32) -> DEC128 {
+  unsafe { __dec128_round_integral_positive(x, flags) }
 }
 
 /// Round 128-bit decimal floating-point value to integral-valued decimal floating-point value
@@ -520,26 +643,41 @@ pub fn bid128_round_integral_positive(x: BID128, flags: &mut u32) -> BID128 {
 pub fn bid128_round_integral_zero(x: BID128, flags: &mut u32) -> BID128 {
   unsafe { __bid128_round_integral_zero(x, flags) }
 }
+pub fn dec128_round_integral_zero(x: DEC128, flags: &mut u32) -> DEC128 {
+  unsafe { __dec128_round_integral_zero(x, flags) }
+}
 
 /// Returns `x * 10^n`.
 pub fn bid128_scalbn(x: BID128, n: i32) -> BID128 {
   unsafe { __bid128_scalbn(x, n) }
+}
+pub fn dec128_scalbn(x: DEC128, n: i32) -> DEC128 {
+  __dec128_scalbn(x, n)
 }
 
 /// Returns decimal floating-point square root.
 pub fn bid128_sqrt(x: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_sqrt(x, round, flags) }
 }
+pub fn dec128_sqrt(x: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_sqrt(x, round, flags)
+}
 
 /// Returns a result of decimal floating-point subtraction, [Decimal128] - [Decimal128] -> [Decimal128]
 pub fn bid128_sub(x: BID128, y: BID128, round: u32, flags: &mut u32) -> BID128 {
   unsafe { __bid128_sub(x, y, round, flags) }
+}
+pub fn dec128_sub(x: DEC128, y: DEC128, round: u32, flags: &mut u32) -> DEC128 {
+  __dec128_sub(x, y, round, flags)
 }
 
 /// Convert 128-bit decimal floating-point value to 32-bit signed integer
 /// with rounding-to-zero mode, inexact exceptions are not signaled.
 pub fn bid128_to_int32_int(x: BID128, flags: &mut u32) -> i32 {
   unsafe { __bid128_to_int32_int(x, flags) }
+}
+pub fn dec128_to_int32_int(x: DEC128, flags: &mut u32) -> i32 {
+  __dec128_to_int32_int(x, flags)
 }
 
 /// Convert 128-bit decimal floating-point value to 32-bit unsigned integer
@@ -552,6 +690,9 @@ pub fn bid128_to_uint32_int(x: BID128, flags: &mut u32) -> u32 {
 /// with rounding-to-zero mode, inexact exceptions are not signaled.
 pub fn bid128_to_int64_int(x: BID128, flags: &mut u32) -> i64 {
   unsafe { __bid128_to_int64_int(x, flags) }
+}
+pub fn dec128_to_int64_int(x: DEC128, flags: &mut u32) -> i64 {
+  __dec128_to_int64_int(x, flags)
 }
 
 /// Convert 128-bit decimal floating-point value to 64-bit unsigned integer
